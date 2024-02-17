@@ -5,7 +5,7 @@ import "./index.css";
 
 function BookList() {
     return (
-        <section className="booklist">
+        <section className='booklist'>
             <Book />
             <Book />
             <Book />
@@ -16,7 +16,7 @@ function BookList() {
 
 const Book = () => {
     return (
-        <article className="book">
+        <article className='book'>
             <Image />
             <Title />
             <Author />
@@ -33,7 +33,11 @@ const Image = () => (
 const Title = () => {
     return <h2>Interesting Facts For Curious Minds</h2>;
 };
-const Author = () => <h4>Jordan Moore</h4>;
+const Author = () => (
+    <h4 style={{ color: "#617d98", fontSize: "0.75rem", marginTop: "0.5rem" }}>
+        Jordan Moore
+    </h4>
+);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
