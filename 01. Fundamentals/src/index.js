@@ -21,12 +21,45 @@ const books = [
 function BookList() {
     return (
         <section className='booklist'>
+            <EventExamples />
+
             {books.map((book) => {
                 return <Book {...book} key={book.id} />;
             })}
         </section>
     );
 }
+
+const EventExamples = () => {
+    const handleFormInput = (e) => {
+        console.log(e); // event object!
+        console.log(e.target); // points to the element!
+        console.log(e.target.name); // points to the name of the element!
+        console.log(e.target.value); // points to the value inside the element!
+    };
+    const handleButtonClick = () => {
+        alert("Handle Button Click!");
+    };
+    const handleFormSubmission = (e) => {
+        e.preventDefault();
+        console.log("Form Submitted!");
+    };
+
+    return (
+        <section>
+            <form onSubmit={handleFormSubmission}>
+                <h2>Typical Form</h2>
+                <input
+                    type='text'
+                    name='example'
+                    onChange={handleFormInput}
+                    style={{ margin: "1rem 0" }}
+                />
+            </form>
+            <button onClick={handleButtonClick}>Click Me!</button>
+        </section>
+    );
+};
 
 const Book = (props) => {
     const { img, title, author } = props;
