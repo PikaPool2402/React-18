@@ -1,4 +1,4 @@
-const books = [
+export const books = [
     {
         author: "Jordan Moore",
         title: "Interesting Facts For Curious Minds",
