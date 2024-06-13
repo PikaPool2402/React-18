@@ -1,14 +1,24 @@
+import img1 from "./images/book1.jpg";
+import img2 from "./images/book2.jpg";
+import img3 from "./images/book3.jpg";
+
 export const books = [
     {
         author: "Jordan Moore",
         title: "Interesting Facts For Curious Minds",
-        img: "https://images-na.ssl-images-amazon.com/images/I/71m+Qtq+HrL._AC_UL900_SR900,600_.jpg",
+        img: img1,
         id: 1,
     },
     {
         author: "James Clear",
         title: "Atomic Habits",
-        img: "https://images-na.ssl-images-amazon.com/images/I/81wgcld4wxL._AC_UL900_SR900,600_.jpg",
+        img: img2,
+        id: 2,
+    },
+    {
+        author: "Jimmy Niro",
+        title: "Dad Jokes",
+        img: img3,
         id: 2,
     },
 ];
