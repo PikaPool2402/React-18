@@ -1,4 +1,4 @@
-# Advaned React
+# Advanced React
 
 ## The Need For State
 
@@ -6,7 +6,7 @@
 import Starter from "./tutorial/01-useState/starter/01-error-example.jsx";
 ```
 
--   in "App.jsx", import the tutorial components one by one to learn
+-   in "App.jsx", import the tutorial components one by one for every concept
 
 #### Setup Challenge :
 
@@ -176,7 +176,6 @@ const UseStateArray = () => {
     return (
         <div>
             {people.map((person) => {
-                // console.log(person);
                 const { id, name } = person;
                 return (
                     <div key={id}>
