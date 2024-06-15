@@ -1,28 +1,33 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 const UseStateObject = () => {
-  const [person, setPerson] = useState({
-    name: 'peter',
-    age: 24,
-    hobby: 'read books',
-  });
+    const [person, setPerson] = useState({
+        name: "Peter",
+        age: 26,
+        hobby: "Read Books",
+    });
 
-  const displayPerson = () => {
-    setPerson({ name: 'john', age: 28, hobby: 'scream at the computer' });
-    // be careful, don't overwrite
-    // setPerson({ name: 'susan' });
-    // setPerson({ ...person, name: 'susan' });
-  };
-  return (
-    <>
-      <h3>{person.name}</h3>
-      <h3>{person.age}</h3>
-      <h4>Enjoys To: {person.hobby}</h4>
-      <button className='btn' onClick={displayPerson}>
-        show john
-      </button>
-    </>
-  );
+    const handleClick = () => {
+        setPerson({
+            name: "John",
+            age: 30,
+            hobby: "Plays Games",
+        });
+
+        // setPerson({ ...person, name: "Kush" });
+        // change only one property, and preserve the rest
+    };
+
+    return (
+        <div>
+            <h4>{person.name}</h4>
+            <h4>{person.age}</h4>
+            <h4>Enjoys: {person.hobby}</h4>
+            <button type='button' className='btn' onClick={handleClick}>
+                Show John
+            </button>
+        </div>
+    );
 };
 
 export default UseStateObject;

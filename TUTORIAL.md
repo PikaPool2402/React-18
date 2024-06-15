@@ -207,41 +207,43 @@ export default UseStateArray;
 import Starter from "./tutorial/01-useState/starter/04-useState-object.jsx";
 ```
 
-Setup Challenge :
+#### Setup Challenge :
 
 -   setup three state values
-    -   name(string)
-    -   age(number)
-    -   hobby(string)
--   render in the browser
+    -   name - string
+    -   age - number
+    -   hobby - string
+-   render these in the browser
 -   create a button
     -   setup a function
-        -   update all three state values
--   as a result once the user clicks the button,
-    new person is displayed in the browser
+        -   update all the three state values
+-   Once the user clicks the button, a new person is displayed in the browser
+
+#### Without Object
 
 ```js
 import { useState } from "react";
 
 const UseStateObject = () => {
-    const [name, setName] = useState("peter");
-    const [age, setAge] = useState(24);
-    const [hobby, setHobby] = useState("read books");
+    const [name, setName] = useState("Peter");
+    const [age, setAge] = useState(26);
+    const [hobby, setHobby] = useState("Read Books");
 
-    const displayPerson = () => {
-        setName("john");
-        setAge(28);
-        setHobby("scream at the computer");
+    const handleClick = () => {
+        setName("John");
+        setAge(30);
+        setHobby("Play Games");
     };
+
     return (
-        <>
-            <h3>{name}</h3>
-            <h3>{age}</h3>
-            <h4>Enjoys To: {hobby}</h4>
-            <button className='btn' onClick={displayPerson}>
-                show john
+        <div>
+            <h4>{name}</h4>
+            <h4>{age}</h4>
+            <h4>Enjoys: {hobby}</h4>
+            <button type='button' className='btn' onClick={handleClick}>
+                Show John
             </button>
-        </>
+        </div>
     );
 };
 
@@ -250,61 +252,65 @@ export default UseStateObject;
 
 #### Automatic Batching
 
-In React, "batching" refers to the process of grouping multiple state updates into a single update. This can be useful in certain cases because it allows React to optimize the rendering of your components by minimizing the number of DOM updates that it has to perform.
+-   In React, "batching" refers to the process of grouping multiple state updates into a single update. This can be useful in certain cases because it allows React to optimize the rendering of your components by minimizing the number of DOM updates that it has to perform.
 
-By default, React uses a technique called "auto-batching" to group state updates that occur within the same event loop into a single update. This means that if you call the state update function multiple times in a short period of time, React will only perform a single re-render for all of the updates.
+-   By default, React uses a technique called "auto-batching" to group state updates that occur within the same event loop into a single update. This means that if you call the state update function multiple times in a short period of time, React will only perform a single re-render for all of the updates.
 
-React 18 ensures that state updates invoked from any location will be batched by default. This will batch state updates, including native event handlers, asynchronous operations, timeouts, and intervals.
+-   React 18 ensures that state updates invoked from any location will be batched by default. This will batch state updates, including native event handlers, asynchronous operations, timeouts, and intervals.
 
-#### Switch to Object
+#### Switch To Object
 
 ```js
 import { useState } from "react";
 
 const UseStateObject = () => {
     const [person, setPerson] = useState({
-        name: "peter",
-        age: 24,
-        hobby: "read books",
+        name: "Peter",
+        age: 26,
+        hobby: "Read Books",
     });
 
-    const displayPerson = () => {
-        setPerson({ name: "john", age: 28, hobby: "scream at the computer" });
-        // be careful, don't overwrite
-        // setPerson('shakeAndBake');
-        // setPerson({ name: 'susan' });
-        // setPerson({ ...person, name: 'susan' });
+    const handleClick = () => {
+        setPerson({
+            name: "John",
+            age: 30,
+            hobby: "Plays Games",
+        });
+
+        // setPerson({ ...person, name: "Kush" });
+        // change only one property, and preserve the rest
     };
+
     return (
-        <>
-            <h3>{person.name}</h3>
-            <h3>{person.age}</h3>
-            <h4>Enjoys To: {person.hobby}</h4>
-            <button className='btn' onClick={displayPerson}>
-                show john
+        <div>
+            <h4>{person.name}</h4>
+            <h4>{person.age}</h4>
+            <h4>Enjoys: {person.hobby}</h4>
+            <button type='button' className='btn' onClick={handleClick}>
+                Show John
             </button>
-        </>
+        </div>
     );
 };
 
 export default UseStateObject;
 ```
 
-#### Set Function "Gotcha"
+### Set Function "Gotcha"
 
 ```js
 import Starter from "./tutorial/01-useState/starter/05-useState-gotcha.jsx";
 ```
 
-Setup Challenge :
+#### Setup Challenge :
 
--   setup a state value and the button
+-   setup a state value and a button
 -   add functionality to increase value by 1
--   log a state value, right after setFunction
+-   log the state value, right after setFunction
 
-Keep in mind that the state update function setState does not immediately mutate the state. Instead, it schedules an update to the state and tells React that it needs to re-render the component. The actual state update will be performed as part of the next rendering cycle. Be mindful when you need to set state value based on a different state value.
+-   Keep in mind that the state update function setState does not immediately mutate the state. Instead, it schedules an update to the state and tells React that it needs to re-render the component. The actual state update will be performed as part of the next rendering cycle. Be mindful when you need to set state value based on a different state value.
 
-trivial example
+#### Example
 
 ```js
 import { useState } from "react";
@@ -314,17 +320,16 @@ const UseStateGotcha = () => {
 
     const handleClick = () => {
         setValue(value + 1);
-        //  be careful it's the old value
         console.log(value);
-        //  so if you have any functionality
-        // that relies on the latest value
-        // it will be wrong !!!
+        // be careful the value is not updated synchronously!
+        // so if you have any functionality that relies on the latest value, it will be wrong!
     };
+
     return (
         <div>
             <h1>{value}</h1>
-            <button className='btn' onClick={handleClick}>
-                increase
+            <button type='submit' className='btn' onClick={handleClick}>
+                Increase
             </button>
         </div>
     );
@@ -333,7 +338,12 @@ const UseStateGotcha = () => {
 export default UseStateGotcha;
 ```
 
-If you want to update the state immediately and synchronously, you can pass a function to setState that receives the previous state as an argument and returns the new state. For example:
+-   Instead of passing the new state value, we can pass in a function inside the state value.
+-   The parameter of the function, contains the current value of the state. It is provided by React by default.
+-   If you want to update the state immediately and synchronously, you can pass a function to setState that receives the previous state as an argument and returns the new state.
+-   The function MUST return a value, or it fails.
+
+#### Example
 
 ```js
 setState((prevState) => {
@@ -341,7 +351,7 @@ setState((prevState) => {
 });
 ```
 
-This can be useful if you need to update the state based on the previous state, or if you need to update the state synchronously.
+-   This can be useful if you need to update the state based on the previous state, or if you need to update the state synchronously.
 
 ```js
 const handleClick = () => {
