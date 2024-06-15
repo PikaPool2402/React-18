@@ -73,3 +73,9 @@ body {
     background: #c35600;
     color: #fff;
 }
+
+h1 {
+    text-transform: capitalize;
+    text-align: center;
+    margin-top: 4rem;
+}
