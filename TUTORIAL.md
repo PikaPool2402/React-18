@@ -414,74 +414,83 @@ const handleClick = () => {
 
 ## The Need For useEffect
 
--   as an example refactor code in
-    /tutorial/01-useState/03-useState-array
--   should we use functional update approach for everything?
-
-#### Code Example
-
 ```js
 import Starter from "./tutorial/02-useEffect/starter/01-code-example.jsx";
 ```
 
+#### Some Basic Questions?
+
+-   How does the code execute inside a component?
+-   In the below example, the `sayHello()` function is invoked after every re-render/initial render
+-   Therefore, the function also compiles and executes everytime the state is updated, as it triggers a re-render
+-   Thus, we need to take care of infinite loops inside these functions!
+
+#### Example
+
 ```js
 import { useState } from "react";
 
-const ComponentExample = () => {
+const CodeExample = () => {
     const [value, setValue] = useState(0);
+
     const sayHello = () => {
-        console.log("hello there");
-        // be careful
-        // setValue(value + 1);
+        console.log("hello there!");
     };
     sayHello();
+
     return (
         <div>
             <h1>value : {value}</h1>
             <button className='btn' onClick={() => setValue(value + 1)}>
-                click me
+                Click Me!
             </button>
         </div>
     );
 };
-export default ComponentExample;
+export default CodeExample;
 ```
 
--   the problem starts when we update the state
+-   The problem with the code starts, when we update the state, as it triggers a re-render
 
 ```js
 const [value, setValue] = useState(0);
 
 const sayHello = () => {
-    console.log("hello there");
     // be careful, you will have infinite loop
+    console.log("hello there");
     setValue(value + 1);
 };
 sayHello();
 ```
 
--   initial render - setup state value and invoke sayHello
--   in the sayHello update state, trigger re-render
+#### Execution
 
--   re-render - setup state value and invoke sayHello
--   in the sayHello update state, trigger re-render
+-   initial render - we setup state value and invoke the function sayHello
+-   in the sayHello function when we update the state, we trigger a re-render
+
+-   re-render - update the state value and invoke sayHello function again
+-   in the sayHello function when we update the state, we trigger a re-render
 
 -   repeat
 -   repeat
 -   repeat
-    ..................................................
 
--   but what about fetching data?
+-   **this causes an infinite loop to occur, which breaks our application**
 
-#### useEffect Basics
+## useEffect Basics
 
 ```js
 import Starter from "./tutorial/02-useEffect/starter/02-useEffect-basics.jsx";
 ```
 
-useEffect is a hook in React that allows you to perform side effects in function components.There is no need for urban dictionary - basically any work outside of the component. Some examples of side effects are: subscriptions, fetching data, directly updating the DOM, event listeners, timers, etc.
+#### Definition
 
--   useEffect hook
+-   useEffect helps us to run code "conditionally" in our React application.
+-   We will be able to choose, when we want to run a part of code in our application.
+-   useEffect is a hook in React that allows you to perform side effects in function components. There is no need for urban dictionary - basically any work outside of the component. Some examples of side effects are: subscriptions, fetching data, directly updating the DOM, event listeners, timers, etc.
+
+#### useEffect Hook
+
 -   accepts two arguments (second optional)
 -   first argument - cb function
 -   second argument - dependency array
