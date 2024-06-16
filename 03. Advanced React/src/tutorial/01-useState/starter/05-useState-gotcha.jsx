@@ -4,9 +4,8 @@ const UseStateGotcha = () => {
     const [value, setValue] = useState(0);
 
     const handleClick = () => {
-        setValue((currentState) => {
-            const newState = currentState + 1;
-            return newState;
+        setTimeout(() => {
+            setValue(value + 1);
         });
     };
 
