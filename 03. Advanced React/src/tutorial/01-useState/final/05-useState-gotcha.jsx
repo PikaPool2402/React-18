@@ -1,28 +1,25 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 const UseStateGotcha = () => {
-  const [value, setValue] = useState(0);
+    const [value, setValue] = useState(0);
 
-  const handleClick = () => {
-    // setTimeout(() => {
-    // console.log('clicked the button');
-    //   setValue(value + 1);
-    // }, 3000);
-    setTimeout(() => {
-      console.log('clicked the button');
-      setValue((currentState) => {
-        return currentState + 1;
-      });
-    }, 3000);
-  };
-  return (
-    <div>
-      <h1>{value}</h1>
-      <button className='btn' onClick={handleClick}>
-        increase
-      </button>
-    </div>
-  );
+    const handleClick = () => {
+        setTimeout(() => {
+            setValue((currentValue) => {
+                return currentValue + 1;
+                // grab the latest value of the state
+            });
+        }, 3000);
+    };
+
+    return (
+        <div>
+            <h1>{value}</h1>
+            <button type='submit' className='btn' onClick={handleClick}>
+                Increase
+            </button>
+        </div>
+    );
 };
 
 export default UseStateGotcha;

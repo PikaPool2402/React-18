@@ -383,21 +383,36 @@ export default UseStateGotcha;
 
 -   Invoke the functionality after some time
 -   Everytime we will click the button, setTimeOut function will be invoked, and the value will be updated after 3 seconds
+-   Inside the callback function, when we invoke setValue function, we are not grabbing the latest value of the state
+-   Instead, we are grabbing the value that is present inside the variable within those 3 seconds
 
 ```js
 const handleClick = () => {
-    // setTimeout(() => {
-    // console.log('clicked the button');
-    //   setValue(value + 1);
-    // }, 3000);
     setTimeout(() => {
-        console.log("clicked the button");
-        setValue((currentState) => {
-            return currentState + 1;
+        console.log(value);
+        setValue(value + 1);
+        // we are not grabbing the latest value
+    }, 3000);
+};
+```
+
+-   The fix is to use functional approach to update the state, to grab the latest value everytime we invoke the function after clicking the button
+-   the "currentState" parameter provides the latest value of the state, rather than grabbing it from the value variable, which is not updated synchronously
+
+#### Code
+
+```js
+const handleClick = () => {
+    setTimeout(() => {
+        setValue((currentValue) => {
+            return currentValue + 1;
+            // grab the latest value of the state
         });
     }, 3000);
 };
 ```
+
+## The Need For useEffect
 
 -   as an example refactor code in
     /tutorial/01-useState/03-useState-array
