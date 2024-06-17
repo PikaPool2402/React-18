@@ -486,53 +486,95 @@ import Starter from "./tutorial/02-useEffect/starter/02-useEffect-basics.jsx";
 #### Definition
 
 -   useEffect helps us to run code "conditionally" in our React application.
--   We will be able to choose, when we want to run a part of code in our application.
+-   We will be able to choose, when we want to run certain code inside a component.
 -   useEffect is a hook in React that allows you to perform side effects in function components. There is no need for urban dictionary - basically any work outside of the component. Some examples of side effects are: subscriptions, fetching data, directly updating the DOM, event listeners, timers, etc.
 
 #### useEffect Hook
 
--   accepts two arguments (second optional)
--   first argument - cb function
--   second argument - dependency array
--   by default runs on each render (initial and re-render)
--   cb can't return promise (so can't make it async)
--   if dependency array empty [] runs only on initial render
+-   accepts two arguments
+-   first argument - callback function
+-   second argument - dependency array (optional)
+-   callback function cannot return a promise (so we cannot make it async)
+-   if dependency array empty [], the callback function runs only on the initial render
+-   by default, the code inside the callback function runs after every render (initial and re-render)
+
+#### Example
 
 ```js
 import { useState, useEffect } from "react";
 
-const UseEffectBasics = () => {
+const CodeExample = () => {
     const [value, setValue] = useState(0);
+
     const sayHello = () => {
         console.log("hello there");
     };
-
     sayHello();
 
-    // useEffect(() => {
-    //   console.log('hello from useEffect');
-    // });
-
     useEffect(() => {
-        console.log("hello from useEffect");
+        console.log("hello from useEffect!");
     }, []);
+
     return (
         <div>
             <h1>value : {value}</h1>
             <button className='btn' onClick={() => setValue(value + 1)}>
-                click me
+                Click Me!
             </button>
         </div>
     );
 };
-export default UseEffectBasics;
+export default CodeExample;
 ```
 
-#### Multiple Effects
+-   If we have just a plain function, and we invoke it, it will execute after every render (initial render and re-render due to state change).
+-   However, with useEffect, we can choose to run it after every render, or just once, with the help of the dependency array argument (execute only after initial render or after every render).
+
+### Promises
+
+-   Callback Hell - https://www.youtube.com/watch?v=bx9xYPt2tdc&list=PLnHJACx3NwAfRUcuKaYhZ6T5NRIpzgNGJ&index=14
+-   Main reason of using promises is to avoid callback hell.
+-   Allows us to write async code in a synchronous fashion.
+
+##### Example
+
+-   change `<h1>` to red after '3 seconds'.
+-   change `<h2>` to blue after '5 seconds'.
+-   change `<h3>` to green after '2 seconds'.
+-   But all of these "async" changes must be made in synchronous (orderly fashion).
+-   which means first update `<h1>`, then update `<h2>`, and after that update `<h3>`.
+
+##### More Examples
+
+-   [JavaScript Promises - JavaScript Nuggets](https://www.youtube.com/watch?v=IBjmTlShf6U&list=PLnHJACx3NwAfRUcuKaYhZ6T5NRIpzgNGJ&index=15)
+-   Promise is an object that returns a value, which you hope to receive in the future but not now.
+-   Example: You place an order at a restaurant, and you get a recepit which is similar to a promise. The restaurant returns you the plate of food after some time, or the restaurant might deny your order because of some problem. Therefore the receipt acts as the promise in this case.
+-   Promises are used with HTTP Requests.
+-   You set up a request, and the server takes some time to return the response.
+-   You either get the required data from the response, or you might get an error.
+
+### Multiple Effects
 
 ```js
 import Starter from "./tutorial/02-useEffect/starter/03-multiple-effects.jsx";
 ```
+
+-   If we pass an empty array, the function runs only after the initial render.
+-   However, if we pass in the state value, it will also run after the value of the specified state is changed.
+-   We can specify multiple values in the dependency array, and everytime any of the value inside this array changes, the callback function is invoked.
+
+#### Example
+
+```js
+useEffect(() => {
+    console.log("hello from first useEffect");
+}, []);
+useEffect(() => {
+    console.log("hello from second useEffect");
+}, []);
+```
+
+#### Example
 
 ```js
 import { useState, useEffect } from "react";
@@ -541,25 +583,28 @@ const MultipleEffects = () => {
     const [value, setValue] = useState(0);
     const [secondValue, setSecondValue] = useState(0);
 
+    // code runs on initial render, and when "value" is changed!
     useEffect(() => {
         console.log("hello from first useEffect");
     }, [value]);
 
+    // code runs on initial render, and when "secondValue" is changed!
     useEffect(() => {
         console.log("hello from second useEffect");
     }, [secondValue]);
+
     return (
         <div>
-            <h1>value : {value}</h1>
+            <h1>Value : {value}</h1>
             <button className='btn' onClick={() => setValue(value + 1)}>
-                value
+                Value
             </button>
-            <h1>second value : {secondValue}</h1>
+            <h1>Second Value : {secondValue}</h1>
             <button
                 className='btn'
                 onClick={() => setSecondValue(secondValue + 1)}
             >
-                second value
+                Second Value
             </button>
         </div>
     );
