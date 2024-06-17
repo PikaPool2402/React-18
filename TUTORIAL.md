@@ -530,11 +530,31 @@ export default CodeExample;
 -   If we have just a plain function, and we invoke it, it will execute after every render (initial render and re-render due to state change).
 -   However, with useEffect, we can choose to run it after every render, or just once, with the help of the dependency array argument (execute only after initial render or after every render).
 
+#### Async Functions
+
+```js
+// WRONG, cannot return a promise!
+useEffect(async () => {
+    console.log("hello from useEffect!");
+}, []);
+```
+
+```js
+// CORRECT, we can set up inside, and invoke it!
+useEffect(() => {
+    const someFunc = async () => {
+        await fetch;
+    };
+    someFunc;
+}, []);
+```
+
 ### Promises
 
--   Callback Hell - https://www.youtube.com/watch?v=bx9xYPt2tdc&list=PLnHJACx3NwAfRUcuKaYhZ6T5NRIpzgNGJ&index=14
+-   [Callback Hell - JavaScript Nuggets](https://www.youtube.com/watch?v=bx9xYPt2tdc&list=PLnHJACx3NwAfRUcuKaYhZ6T5NRIpzgNGJ&index=14)
 -   Main reason of using promises is to avoid callback hell.
--   Allows us to write async code in a synchronous fashion.
+-   Promises allows us to write async code in a synchronous fashion.
+-   Code that completes execution at different times, to run in an ordered fashion (sequence-wise)
 
 ##### Example
 
@@ -544,7 +564,7 @@ export default CodeExample;
 -   But all of these "async" changes must be made in synchronous (orderly fashion).
 -   which means first update `<h1>`, then update `<h2>`, and after that update `<h3>`.
 
-##### More Examples
+##### Real-Life Examples
 
 -   [JavaScript Promises - JavaScript Nuggets](https://www.youtube.com/watch?v=IBjmTlShf6U&list=PLnHJACx3NwAfRUcuKaYhZ6T5NRIpzgNGJ&index=15)
 -   Promise is an object that returns a value, which you hope to receive in the future but not now.
@@ -552,6 +572,139 @@ export default CodeExample;
 -   Promises are used with HTTP Requests.
 -   You set up a request, and the server takes some time to return the response.
 -   You either get the required data from the response, or you might get an error.
+
+#### Code
+
+```js
+// how to create a promise?
+// call a constructor named "Promise", and pass a callback function inside the constructor.
+// the constructor contains two arguments, which are functions themselves.
+
+// promises can be in either of these 3 states - Pending, Rejected, Fulfilled.
+// the starting state is always pending, which goes to either rejected or fulfilled.
+
+// successful promise completion is indicated by resolve() function call.
+// unsuccessful promise completion is indicated by reject() function call.
+// both of these functions are used to pass data to our application, depending on the state of the promise.
+
+// we can set up conditions inside the promise's callback function, to either resolve/fulfill the promise to get the data, or reject/unfulfill the promise to throw an error.
+
+const promise = new Promise((resolve, reject) => {
+    // resolve("data received");
+    // reject("there was an error");
+});
+console.log(promise);
+
+// how to access the values, provided by resolve/reject methods?
+// need to use .then method for resolve(), and .catch method for reject()
+
+promise.then((data) => {
+    // the argument contains the data!
+    console.log(data);
+});
+promise.catch((err) => {
+    // the argument contains the data!
+    console.log(err);
+});
+```
+
+### Async / Await
+
+-   Allows us to write async code, in synchronous fashion.
+-   We can use await to easily grab the data from a settled promise, instead of using a chain of .then() and .catch()!
+
+#### Properties
+
+-   Await will always wait until the promise is settled.
+-   Async function ALWAYS ALWAYS ALWAYS returns a promise.
+-   We can only use await, if we have async in front of the function.
+
+#### Code
+
+```js
+const exampleOne = async () => {
+    return "hello there";
+};
+// ALWAYS returns a promise!
+
+async function exampleTwo() {
+    return "hello there";
+}
+// ALWAYS returns a promise!
+
+console.log(exampleOne());
+console.log(exampleTwo());
+
+// CODE EXAMPLE
+const returnData = async () => {
+    return "hello there";
+};
+
+const displayData = async () => {
+    // grab the result of the settled promise!
+    const result = await returnData();
+    console.log(result);
+};
+displayData();
+```
+
+-   Await function keeps on waiting till the promise is fulfilled, if it is not fulfilled it throws an error.
+-   The error breaks the application, therefore we handle the error using a try-catch block.
+
+```js
+const users = [
+    { id: 1, name: "john" },
+    { id: 2, name: "susan" },
+    { id: 3, name: "anna" },
+];
+
+const articles = [
+    { userId: 1, articles: ["one", "two", "three"] },
+    { userId: 2, articles: ["four", "five"] },
+    { userId: 3, articles: ["six", "seven", "eight", "nine"] },
+];
+
+// USE AWAIT / ASYNC
+const getData = async () => {
+    try {
+        const user = await getUser("john");
+        const articles = await getArticles(user.id);
+        console.log(articles);
+    } catch (error) {
+        console.log(error);
+    }
+};
+getData();
+
+// getUser("susan")
+//     .then((user) => getArticles(user.id))
+//     .then((articles) => console.log(articles))
+//     .catch((err) => console.log(err));
+
+function getUser(name) {
+    return new Promise((resolve, reject) => {
+        const user = users.find((user) => user.name === name);
+
+        if (user) {
+            return resolve(user);
+        } else {
+            reject(`No such user with name : ${name}`);
+        }
+    });
+}
+
+function getArticles(userId) {
+    return new Promise((resolve, reject) => {
+        const userArticles = articles.find((user) => user.userId === userId);
+
+        if (userArticles) {
+            return resolve(userArticles.articles);
+        } else {
+            reject(`Wrong ID`);
+        }
+    });
+}
+```
 
 ### Multiple Effects
 
@@ -612,17 +765,16 @@ const MultipleEffects = () => {
 export default MultipleEffects;
 ```
 
-#### Fetch Data
+### Fetch Data
 
 ```js
 import Starter from "./tutorial/02-useEffect/starter/04-fetch-data.jsx";
 ```
 
-[Javascript Nuggets - Fetch API](https://www.youtube.com/watch?v=C_VIKzfpRrg&list=PLnHJACx3NwAfRUcuKaYhZ6T5NRIpzgNGJ&index=18&t=343s)
-
+-   [Javascript Nuggets - Fetch API](https://www.youtube.com/watch?v=C_VIKzfpRrg&list=PLnHJACx3NwAfRUcuKaYhZ6T5NRIpzgNGJ&index=18&t=343s)
 -   later in the course we will use axios
 
-Setup Challenge :
+#### Setup Challenge :
 
 -   import useState and useEffect
 -   setup state value
