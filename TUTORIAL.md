@@ -585,6 +585,7 @@ useEffect(() => {
 
 // successful promise completion is indicated by resolve() function call.
 // unsuccessful promise completion is indicated by reject() function call.
+// when a promise rejects, the control jumps to the closest rejection handler (.catch).
 // both of these functions are used to pass data to our application, depending on the state of the promise.
 
 // we can set up conditions inside the promise's callback function, to either resolve/fulfill the promise to get the data, or reject/unfulfill the promise to throw an error.
@@ -649,7 +650,8 @@ displayData();
 ```
 
 -   Await function keeps on waiting till the promise is fulfilled, if it is not fulfilled it throws an error.
--   The error breaks the application, therefore we handle the error using a try-catch block.
+-   When a promise rejects, the control jumps to the closest rejection handler (catch block).
+-   Therefore we must handle the error using a try-catch block, or the application breaks.
 
 ```js
 const users = [
@@ -772,21 +774,56 @@ import Starter from "./tutorial/02-useEffect/starter/04-fetch-data.jsx";
 ```
 
 -   [Javascript Nuggets - Fetch API](https://www.youtube.com/watch?v=C_VIKzfpRrg&list=PLnHJACx3NwAfRUcuKaYhZ6T5NRIpzgNGJ&index=18&t=343s)
--   later in the course we will use axios
+-   Fetch some GitHub users, and display them on the screen.
+-   Later in the course we will use axios, for more complex projects.
+
+#### Fetch API
+
+-   Browser API, for HTTP requests.
+-   Fetch ALWAYS ALWAYS returns a promise.
+-   Provided by the browser, don't need to import anything.
+-   Performs GET request, just like the browser. Reads data from the server.
+
+```js
+// below url returns an array of objects
+const url = "https://www.course-api.com/react-tours-project";
+
+// fetch returns a promise
+console.log(fetch(url));
+
+fetch(url)
+    .then((response) => console.log(response)) // not in JSON format!
+    .catch((err) => console.log(err));
+
+// need to use json() function to convert the response to a json object.
+// the json() function returns a promise, which contains the object.
+fetch(url)
+    .then((response) => response.json()) // returns a promise!
+    .then((data) => console.log(data)) // in JSON format!
+    .catch((err) => console.log(err));
+
+const getTours = async () => {
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        console.log(data);
+    } catch (error) {
+        console.log(error);
+    }
+};
+getTours();
+```
 
 #### Setup Challenge :
 
--   import useState and useEffect
--   setup state value
-    -   users - default value []
+-   setup state variable "users"
+    -   default value = [ ]
 -   setup useEffect
--   MAKE SURE IT RUNS ONLY ON INITIAL RENDER
--   in the cb, create a function which performs fetch functionality
-    -   use url I provided in the starter file
-    -   you can use .then or async
-    -   set users equal to result
-    -   iterate over the list and display image, user name and link
--   DON'T WORRY ABOUT CSS, MOST IMPORTANT LOGIC !!!
+    -   make sure it runs only on the initial render
+    -   in the callback, create a function which performs fetch functionality
+-   iterate over the list and display the image, username and also the link
+
+#### Code
 
 ```js
 import { useState, useEffect } from "react";
@@ -797,42 +834,45 @@ const FetchData = () => {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        // you can also setup function outside
-        const fetchData = async () => {
+        const getData = async () => {
             try {
                 const response = await fetch(url);
-                const users = await response.json();
-                setUsers(users);
+                const data = await response.json();
+                setUsers(data);
             } catch (error) {
                 console.log(error);
             }
         };
-        fetchData();
+        getData();
     }, []);
+
     return (
-        <section>
-            <h3>github users</h3>
+        <>
+            <h3>Github Users!</h3>
             <ul className='users'>
                 {users.map((user) => {
                     const { id, login, avatar_url, html_url } = user;
                     return (
                         <li key={id}>
-                            <img src={avatar_url} alt={login} />
+                            <img src={avatar_url} alt='N/A' />
                             <div>
                                 <h5>{login}</h5>
-                                <a href={html_url}>profile</a>
+                                <a href={html_url}>Profile</a>
                             </div>
                         </li>
                     );
                 })}
             </ul>
-        </section>
+        </>
     );
 };
 export default FetchData;
 ```
 
-#### Cleanup Function
+### SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP
+### SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP
+
+### Cleanup Function
 
 ```js
 import Starter from "./tutorial/02-useEffect/starter/05-cleanup-function.jsx";
@@ -951,7 +991,10 @@ function Example() {
 
 -   rest of them by refactoring code
 
-#### Multiple Returns - Basics
+### SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP
+### SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP
+
+## Multiple Returns - Basics
 
 ```js
 import Starter from "./tutorial/03-conditional-rendering/starter/01-multiple-returns-basics.jsx";
