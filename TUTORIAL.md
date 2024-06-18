@@ -1536,25 +1536,73 @@ const SomeComponent = ({ name }) => {
 export default ShortCircuitExamples;
 ```
 
-#### Ternary Operator
+### Ternary Operator
 
-Vanilla JS
+-   In JavaScript, the ternary operator is a way to concisely express a simple conditional statement. It is often called the "conditional operator" or the "ternary conditional operator".
 
-In JavaScript, the ternary operator is a way to concisely express a simple conditional statement. It is often called the "conditional operator" or the "ternary conditional operator".
-
-Here is the basic syntax for using the ternary operator:
+-   Here is the basic syntax for using the ternary operator:
 
 ```js
 condition ? expression1 : expression2;
 ```
 
-If condition is truthy, the operator will return expression1. If condition is falsy, it will return expression2.
+-   If condition is truthy, the operator will return expression1. If condition is falsy, it will return expression2.
 
-Jobster Example
+-   The operator always RETURNS one of the two values.
 
-[Jobster ](https://redux-toolkit-jobster.netlify.app/landing)
+#### Example
 
-#### Toggle Challenge
+```js
+import { useState } from "react";
+
+const ShortCircuitExamples = () => {
+    const [text, setText] = useState("");
+    const [name, setName] = useState("susan");
+    const [user, setUser] = useState({ name: "John" });
+    const [isEditing, setIsEditing] = useState(false);
+
+    return (
+        <div>
+            <h2>Ternary Operator</h2>
+            <button className='btn'>{isEditing ? "edit" : "add"}</button>
+        </div>
+    );
+};
+
+export default ShortCircuitExamples;
+```
+
+#### Example - Return Different Elements
+
+```js
+import { useState } from "react";
+
+const ShortCircuitExamples = () => {
+    const [text, setText] = useState("");
+    const [name, setName] = useState("susan");
+    const [user, setUser] = useState({ name: "John" });
+    const [isEditing, setIsEditing] = useState(false);
+
+    return (
+        <div>
+            <h2>Ternary Operator</h2>
+            {user ? (
+                <div>
+                    <h2>Hello there user {user.name}!</h2>
+                </div>
+            ) : (
+                <div>
+                    <h2>Please sign in!</h2>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default ShortCircuitExamples;
+```
+
+### Toggle Challenge
 
 ```js
 import Starter from "./tutorial/03-conditional-rendering/starter/06-toggle-challenge.jsx";
