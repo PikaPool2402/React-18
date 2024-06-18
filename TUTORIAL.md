@@ -1608,13 +1608,15 @@ export default ShortCircuitExamples;
 import Starter from "./tutorial/03-conditional-rendering/starter/06-toggle-challenge.jsx";
 ```
 
--   create state value (boolean)
--   return a button and a component/element
--   when user clicks the button
-    -   toggle state value
-    -   conditionally render component/element
+#### Initial Setup :
 
-Initial Setup
+-   create a state value (boolean).
+-   return a button and a component/element.
+-   when the user clicks the button:
+    -   toggle the state value.
+    -   conditionally render component/element.
+
+#### Code
 
 ```js
 import { useState } from "react";
@@ -1623,17 +1625,13 @@ const ToggleChallenge = () => {
     const [showAlert, setShowAlert] = useState(false);
 
     const toggleAlert = () => {
-        if (showAlert) {
-            setShowAlert(false);
-            return;
-        }
-        setShowAlert(true);
+        setShowAlert(!showAlert);
     };
 
     return (
         <div>
             <button className='btn' onClick={toggleAlert}>
-                toggle alert
+                Toggle
             </button>
             {showAlert && <Alert />}
         </div>
@@ -1641,32 +1639,32 @@ const ToggleChallenge = () => {
 };
 
 const Alert = () => {
-    return <div className='alert alert-danger'>hello world</div>;
+    return <div className='alert alert-danger'>Hello World!</div>;
 };
+
 export default ToggleChallenge;
 ```
 
-Improvements
-
-```js
-<button className='btn' onClick={() => setShowAlert(!showAlert)}>
-```
-
-#### User Challenge
+### User Challenge
 
 ```js
 import Starter from "./tutorial/03-conditional-rendering/starter/07-user-challenge.jsx";
 ```
 
 -   create state value
-    -   user - default value null
--   create two functions
-    -   login - set's user equal to object with name property
-    -   logout - set's user equal to null
--   in jsx use ? to display two different setups
 
--   h4 with "hello there, user name" and logout button
--   h4 with "please login " and login button
+    -   default value = null
+
+-   create two functions
+
+    -   login - sets user equal to object with name property
+    -   logout - sets user equal to null
+
+-   in jsx use ? to display the two different setups
+    -   h4 with "hello there, user name" and logout button
+    -   h4 with "please login " and login button
+
+#### Code
 
 ```js
 import { useState } from "react";
@@ -1675,8 +1673,7 @@ const UserChallenge = () => {
     const [user, setUser] = useState(null);
 
     const login = () => {
-        // normally connect to db or api
-        setUser({ name: "vegan food truck" });
+        setUser({ name: "Kush" });
     };
     const logout = () => {
         setUser(null);
@@ -1685,20 +1682,31 @@ const UserChallenge = () => {
     return (
         <div>
             {user ? (
-                <div>
-                    <h4>hello there, {user.name}</h4>
-                    <button className='btn' onClick={logout}>
-                        logout
-                    </button>
-                </div>
+                <Login name={user.name} logout={logout} />
             ) : (
-                <div>
-                    <h4>Please Login</h4>
-                    <button className='btn' onClick={login}>
-                        login
-                    </button>
-                </div>
+                <Logout login={login} />
             )}
+        </div>
+    );
+};
+
+const Login = ({ name, logout }) => {
+    return (
+        <div>
+            <h4>Hello There! {name}</h4>
+            <button className='btn' onClick={() => logout()}>
+                Logout
+            </button>
+        </div>
+    );
+};
+const Logout = ({ login }) => {
+    return (
+        <div>
+            <h4>Please Sign In!</h4>
+            <button className='btn' onClick={() => login()}>
+                Login
+            </button>
         </div>
     );
 };
@@ -1706,7 +1714,7 @@ const UserChallenge = () => {
 export default UserChallenge;
 ```
 
-#### Project Structure - Default Export
+## Project Structure - Default Export
 
 /tutorial/04-project-structure/starter
 

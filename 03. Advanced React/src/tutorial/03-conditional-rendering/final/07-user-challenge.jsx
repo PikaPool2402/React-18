@@ -1,35 +1,45 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 const UserChallenge = () => {
-  const [user, setUser] = useState(null);
+    const [user, setUser] = useState(null);
 
-  const login = () => {
-    // normally connect to db or api
-    setUser({ name: 'vegan food truck' });
-  };
-  const logout = () => {
-    setUser(null);
-  };
+    const login = () => {
+        setUser({ name: "Kush" });
+    };
+    const logout = () => {
+        setUser(null);
+    };
 
-  return (
-    <div>
-      {user ? (
+    return (
         <div>
-          <h4>hello there, {user.name}</h4>
-          <button className='btn' onClick={logout}>
-            logout
-          </button>
+            {user ? (
+                <Login name={user.name} logout={logout} />
+            ) : (
+                <Logout login={login} />
+            )}
         </div>
-      ) : (
+    );
+};
+
+const Login = ({ name, logout }) => {
+    return (
         <div>
-          <h4>Please Login</h4>
-          <button className='btn' onClick={login}>
-            login
-          </button>
+            <h4>Hello There! {name}</h4>
+            <button className='btn' onClick={() => logout()}>
+                Logout
+            </button>
         </div>
-      )}
-    </div>
-  );
+    );
+};
+const Logout = ({ login }) => {
+    return (
+        <div>
+            <h4>Please Sign In!</h4>
+            <button className='btn' onClick={() => login()}>
+                Login
+            </button>
+        </div>
+    );
 };
 
 export default UserChallenge;
