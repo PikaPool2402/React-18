@@ -870,6 +870,7 @@ export default FetchData;
 ```
 
 ### SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP
+
 ### SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP
 
 ### Cleanup Function
@@ -992,23 +993,29 @@ function Example() {
 -   rest of them by refactoring code
 
 ### SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP
+
 ### SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP
 
-## Multiple Returns - Basics
+## Multiple Returns
+
+### Basics
 
 ```js
 import Starter from "./tutorial/03-conditional-rendering/starter/01-multiple-returns-basics.jsx";
 ```
 
-Vanilla JS
+-   Control what is displayed in the browser, based on some condition.
+-   Multiple returns are same in React as in Vanilla JS.
+
+#### Vanilla JS
 
 ```js
 const sayHello = (name) => {
     if (name) {
         return `Hello, ${name}`;
-        // exit the function, skip rest of the code
+        // exit the function, skip rest of the code!
     }
-    // so if name provided, won't get to this line
+    // if name is not provided, return below value!
     return "Hello, there";
 };
 
@@ -1018,49 +1025,49 @@ const secondResp = sayHello();
 console.log(secondResp); // Hello, there
 ```
 
--   if no explicit return by default function returns 'undefined'
+-   If no explicit return, by default the function returns "undefined".
+
+#### Example
 
 ```js
 import { useEffect, useState } from "react";
 
 const MultipleReturnsBasics = () => {
-    // while fetching data
-    // convention with boolean values "isSomething"
     const [isLoading, setIsLoading] = useState(true);
+    // naming convention of boolean values "isSomething"!
 
     useEffect(() => {
         setTimeout(() => {
-            // done fetching data
             setIsLoading(false);
+            // done fetching data!
         }, 3000);
     }, []);
 
-    // can return entire app
+    // set-up multiple returns!
     if (isLoading) {
-        return <h2>Loading...</h2>;
+        return <h1>Loading...</h1>;
     }
-
-    return <h2>My App</h2>;
+    return <h2>Multiple Returns Basics</h2>;
 };
 export default MultipleReturnsBasics;
 ```
 
-#### Multiple Returns - Fetch Data
+### Fetch Data
 
 ```js
 import Starter from "./tutorial/03-conditional-rendering/starter/02-multiple-returns-fetch-data.jsx";
 ```
 
-Setup Challenge :
+#### Setup Challenge :
 
--   practice on setting up state values and data fetching
--   create state variable
-    -   user - default value null
--   fetch data from the url (for now just log result)
--   if you see user object in the console, continue with the videos
+-   create a state variable, default value = null
+-   fetch data from the url, and log the data
+
+#### Code
 
 ```js
 import { useEffect, useState } from "react";
+
 const url = "https://api.github.com/users/QuincyLarson";
 
 const MultipleReturnsFetchData = () => {
@@ -1069,64 +1076,63 @@ const MultipleReturnsFetchData = () => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const resp = await fetch(url);
-                const user = await resp.json();
+                const response = await fetch(url);
+                const user = await response.json();
                 console.log(user);
             } catch (error) {
-                // fetch only cares about network errors
-                // will work with axios
                 console.log(error);
             }
         };
         fetchUser();
     }, []);
 
-    return <h2>Fetch Example</h2>;
+    return <h2>Fetch Data</h2>;
 };
 export default MultipleReturnsFetchData;
 ```
 
-Data Fetching :
+#### Data Fetching :
 
--   usually three options
+-   Usually, we have three options when fetching data:
+    -   **Loading** - waiting for data to arrive (display loading state)
+    -   **Error** - there was an error (display error message)
+    -   **Success** - received data (display data)
 
-    -   loading - waiting for data to arrive (display loading state)
-    -   error - there was an error (display error message)
-    -   success - received data (display data)
+#### Code
 
 ```js
 import { useEffect, useState } from "react";
+
 const url = "https://api.github.com/users/QuincyLarson";
 
 const MultipleReturnsFetchData = () => {
-    // convention to setup booleans with isSomething
-    const [isLoading, setIsLoading] = useState(true);
-    const [isError, setIsError] = useState(false);
+    const [isLoading, setIsLoading] = useState(true); // initially true, as we always load data first!
+    const [isError, setIsError] = useState(false); // initially false, we assume no error occurs!
     const [user, setUser] = useState(null);
 
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const resp = await fetch(url);
-                const user = await resp.json();
-                // console.log(user);
+                const response = await fetch(url);
+                const user = await response.json();
                 setUser(user);
             } catch (error) {
                 setIsError(true);
-                console.log(error);
+                // go-to the error block return!
             }
-            // hide loading
             setIsLoading(false);
+            // loading-block is complete in both cases!
         };
         fetchUser();
     }, []);
-    // order matters
-    // don't place user JSX before loading or error
+
     if (isLoading) {
-        return <h2>Loading...</h2>;
+        return <h1>Loading...</h1>;
     }
+    // after loading is complete, either we get an error, or the data!
+
     if (isError) {
-        return <h2>There was an error...</h2>;
+        return <h1>There Was An Error!</h1>;
     }
     return (
         <div>
@@ -1144,32 +1150,39 @@ const MultipleReturnsFetchData = () => {
 export default MultipleReturnsFetchData;
 ```
 
-#### Fetch Errors "Gotcha" (optional)
+#### Fetch Errors "Gotcha"
+
+-   Unlike Axios, by default, the fetch() API does not consider HTTP status codes in the 4xx or 5xx range to be errors.
+-   Instead, it considers these status codes to be successfully completed.
+-   To catch these 404 errors, we need to look for the "ok" property in the "response" header.
+
+#### Code
 
 ```js
-import Starter from "./tutorial/03-conditional-rendering/starter/02-multiple-returns-fetch-data.jsx";
+useEffect(() => {
+    const fetchUser = async () => {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                setIsError(true);
+                setIsLoading(false);
+                return;
+                // exit the function to throw an error!
+            }
+            const user = await response.json();
+            setUser(user);
+        } catch (error) {
+            setIsError(true);
+            // go-to the error block return!
+        }
+        setIsLoading(false);
+        // loading-block is complete in both cases!
+    };
+    fetchUser();
+}, []);
 ```
 
-Unlike for example Axios, by default, the fetch() API does not consider HTTP status codes in the 4xx or 5xx range to be errors. Instead, it considers these status codes to be indicative of a successful request,
-
-```js
-try {
-const resp = await fetch(url);
-// console.log(resp);
-if (!resp.ok) {
-  setIsError(true);
-  setIsLoading(false);
-  return;
-}
-
-const user = await resp.json();
-setUser(user);
-
-}
-
-```
-
-#### Order Matters - Setup
+### Order Matters - Setup
 
 ```js
 import Starter from "./tutorial/03-conditional-rendering/starter/02-multiple-returns-fetch-data.jsx";
