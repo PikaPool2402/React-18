@@ -7,6 +7,9 @@ const MultipleReturnsFetchData = () => {
     const [isError, setIsError] = useState(false); // initially false, we assume no error occurs!
     const [user, setUser] = useState(null);
 
+    // const { avatar_url, name, company, bio } = user;
+    // CANNOT DESTRUCTURE HERE!
+
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -29,6 +32,9 @@ const MultipleReturnsFetchData = () => {
         fetchUser();
     }, []);
 
+    // const { avatar_url, name, company, bio } = user;
+    // CANNOT DESTRUCTURE HERE!
+
     if (isLoading) {
         return <h1>Loading...</h1>;
     }
@@ -37,16 +43,19 @@ const MultipleReturnsFetchData = () => {
     if (isError) {
         return <h1>There Was An Error!</h1>;
     }
+
+    const { avatar_url, name, company, bio } = user;
+    // CAN DESTRUCTURE AFTER CONDITIONS!
     return (
         <div>
             <img
-                style={{ width: "150px", borderRadius: "25px" }}
-                src={user.avatar_url}
-                alt={user.name}
+                style={{ width: "100px", borderRadius: "25px" }}
+                src={avatar_url}
+                alt={name}
             />
-            <h2>{user.name}</h2>
-            <h4>works at {user.company}</h4>
-            <p>{user.bio}</p>
+            <h2>{name}</h2>
+            <h4>works at {company}</h4>
+            <p>{bio}</p>
         </div>
     );
 };

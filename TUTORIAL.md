@@ -1182,103 +1182,152 @@ useEffect(() => {
 }, []);
 ```
 
-### Order Matters - Setup
+### Order Matters
 
 ```js
 import Starter from "./tutorial/03-conditional-rendering/starter/02-multiple-returns-fetch-data.jsx";
 ```
 
-Please don't dismiss this topic. A lot of questions in course Q&A.
+#### Setup Challenge :
 
-Challenge :
-
--   destructure properties and remove user from JSX
--   you might or might not encounter the bug
+-   destructure the properties, and use inside the return.
+-   you might or might not encounter the bug, after destructuring the properties.
 
 ```js
-return (
-    <div>
-        <img
-            style={{ width: "100px", borderRadius: "25px" }}
-            src={avatar_url}
-            alt={name}
-        />
-        <h2>{name}</h2>
-        <h4>works at {company}</h4>
-        <p>{bio}</p>
-    </div>
-);
+import { useEffect, useState } from "react";
+
+const url = "https://api.github.com/users/QuincyLarson";
+
+const MultipleReturnsFetchData = () => {
+    const [isLoading, setIsLoading] = useState(true);
+    const [isError, setIsError] = useState(false);
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    setIsError(true);
+                    setIsLoading(false);
+                    return;
+                }
+                const user = await response.json();
+                setUser(user);
+            } catch (error) {
+                setIsError(true);
+            }
+            setIsLoading(false);
+        };
+        fetchUser();
+    }, []);
+
+    if (isLoading) {
+        return <h1>Loading...</h1>;
+    }
+    if (isError) {
+        return <h1>There Was An Error!</h1>;
+    }
+
+    const { avatar_url, name, company, bio } = user;
+    // destructuring works in this case!
+    return (
+        <div>
+            <img
+                style={{ width: "100px", borderRadius: "25px" }}
+                src={avatar_url}
+                alt={name}
+            />
+            <h2>{name}</h2>
+            <h4>works at {company}</h4>
+            <p>{bio}</p>
+        </div>
+    );
+};
+export default MultipleReturnsFetchData;
 ```
 
-#### Order Matters - Solution
-
--   before returns
+-   We only have the user object, after the useEffect function is complete, which occurs when the isLoading state become false. Therefore cannot destructure before that.
+-   Also if we hit the error block in the useEffect function, the user object still remains null, and therefore, we cannot destructure it.
+-   Therefore, we must destructure the properties after all of the conditional returns only.
 
 ```js
-const [user, setUser] = useState(null);
-console.log(user); // still null
-// we can't pull out properties from null
-const { avatar_url, name, company, bio } = user;
+import { useEffect, useState } from "react";
+
+const url = "https://api.github.com/users/QuincyLarson";
+
+const MultipleReturnsFetchData = () => {
+    const [isLoading, setIsLoading] = useState(true);
+    const [isError, setIsError] = useState(false);
+    const [user, setUser] = useState(null);
+
+    // const { avatar_url, name, company, bio } = user;
+    // CANNOT DESTRUCTURE HERE! USER NULL!
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    setIsError(true);
+                    setIsLoading(false);
+                    return;
+                }
+                const user = await response.json();
+                setUser(user);
+            } catch (error) {
+                setIsError(true);
+            }
+            setIsLoading(false);
+        };
+        fetchUser();
+    }, []);
+
+    // const { avatar_url, name, company, bio } = user;
+    // CANNOT DESTRUCTURE HERE! USER NULL!
+
+    if (isLoading) {
+        return <h1>Loading...</h1>;
+        // user state still remains null!
+    }
+    if (isError) {
+        return <h1>There Was An Error!</h1>;
+        // user state still remains null!
+    }
+
+    const { avatar_url, name, company, bio } = user;
+    // CAN DESTRUCTURE ONLY AFTER THE CONDITIONS!
+    return (
+        <div>
+            <img
+                style={{ width: "100px", borderRadius: "25px" }}
+                src={avatar_url}
+                alt={name}
+            />
+            <h2>{name}</h2>
+            <h4>works at {company}</h4>
+            <p>{bio}</p>
+        </div>
+    );
+};
+export default MultipleReturnsFetchData;
 ```
 
--   after returns
-
-```js
-console.log(user); // user object;
-const { avatar_url, name, company, bio } = user;
-```
-
-```js
-return (
-    <div>
-        <img
-            style={{ width: "100px", borderRadius: "25px" }}
-            src={avatar_url}
-            alt={name}
-        />
-        <h2>{name}</h2>
-        <h4>works at {company}</h4>
-        <p>{bio}</p>
-    </div>
-);
-```
-
-Vanilla JS
+#### Vanilla JS
 
 ```js
 const someObject = {
     name: "jo koy",
 };
-// this is cool
-someObject.name; // returns 'jo koy'
-someObject.propertyThatDoesNotExist; // returns undefined
 
-// not cool at all, javascript will scream, yell and complain
+// this is OK!
+someObject.name; // returns 'jo koy'!
+someObject.propertyThatDoesNotExist; // returns undefined!
+
+// this is not OK, throws error!
 const randomValue = null;
 randomValue.name;
-
-// this is ok
-const randomList = [];
-console.log(randomList[0]); // returns undefined
-
-// not cool at all, javascript will scream, yell and complain
-console.log(randomList[0].name);
 ```
-
-#### Fetch Function Location
-
-```js
-const fetchData = async () => {
-    // fetch data
-};
-
-useEffect(() => {
-    fetchData();
-}, []);
-```
-
--   DON'T ADD fetchData to dependency array !!!
--   IT WILL TRIGGER INFINITE LOOP !!!
 
 #### DON'T CALL HOOKS CONDITIONALLY
 
