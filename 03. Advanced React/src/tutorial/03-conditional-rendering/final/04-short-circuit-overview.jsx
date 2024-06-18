@@ -1,24 +1,19 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 const ShortCircuitOverview = () => {
-  // falsy
-  const [text, setText] = useState('');
-  // truthy
-  const [name, setName] = useState('susan');
+    const [text, setText] = useState(""); // falsy
+    const [name, setName] = useState("susan"); // truthy
 
-  const codeExample = text || 'hello world';
+    const codeExample = text || "hello world";
 
-  // can't use if statements
-  return (
-    <div>
-      {/* {if(someCondition){"won't work"}} */}
-
-      <h4>Falsy OR : {text || 'hello world'}</h4>
-      <h4>Falsy AND {text && 'hello world'}</h4>
-      <h4>Truthy OR {name || 'hello world'}</h4>
-      <h4>Truthy AND {name && 'hello world'}</h4>
-      {codeExample}
-    </div>
-  );
+    return (
+        <div>
+            <h4>Falsy AND : {text && "hello world"}</h4>
+            <h4>Truthy AND : {name && "hello world"}</h4>
+            <h4>Falsy OR : {text || "hello world"}</h4>
+            <h4>Truthy OR : {name || "hello world"}</h4>
+            {codeExample}
+        </div>
+    );
 };
 export default ShortCircuitOverview;

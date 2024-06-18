@@ -1317,7 +1317,7 @@ export default MultipleReturnsFetchData;
 
 ```js
 const someObject = {
-    name: "jo koy",
+    name: "John",
 };
 
 // this is OK!
@@ -1329,11 +1329,18 @@ const randomValue = null;
 randomValue.name;
 ```
 
-#### DON'T CALL HOOKS CONDITIONALLY
+### Hook Rules
 
 ```js
 import Starter from "./tutorial/03-conditional-rendering/starter/03-hooks-rule.jsx";
 ```
+
+#### Conditional Hooks
+
+-   Cannot call hooks conditionally (inside if conditions).
+-   Similarily, cannot place useEffect after multiple returns, as the code might stop execution before the useEffect hook is called.
+
+#### Example
 
 ```js
 import { useState, useEffect } from "react";
@@ -1341,79 +1348,50 @@ import { useState, useEffect } from "react";
 const Example = () => {
     const [condition, setCondition] = useState(true);
     if (condition) {
-        // won't work
         const [state, setState] = useState(false);
+        // cannot call hooks conditonally!
     }
 
     if (condition) {
         return <h2>Hello There</h2>;
     }
-    // this will also fail
     useEffect(() => {
         console.log("hello there");
+        // this will also fail, multiple returns!
     }, []);
-    return <h2>example</h2>;
+
+    return (
+        <div>
+            <h1>Example</h1>
+        </div>
+    );
 };
 
 export default Example;
 ```
 
-#### Truthy and Falsy Values (optional)
+#### Truthy and Falsy Values
 
-Vanilla JS
+-   In JavaScript, a value is considered "truthy" if it is evaluated to true when used in a boolean context. A value is considered "falsy" if it is evaluated to false when used in a boolean context.
 
-In JavaScript, a value is considered "truthy" if it is evaluated to true when used in a boolean context. A value is considered "falsy" if it is evaluated to false when used in a boolean context.
+-   Here is a list of values that are considered falsy in JavaScript:
 
-Here is a list of values that are considered falsy in JavaScript:
+    -   false
+    -   0 (zero)
+    -   "" (empty string)
+    -   null
+    -   undefined
+    -   NaN (Not a Number)
 
-false
-0 (zero)
-"" (empty string)
-null
-undefined
-NaN (Not a Number)
-All other values, including objects and arrays, are considered truthy.
+-   All other values, including objects and arrays, are considered truthy.
 
-For example:
+#### Short Circuit Evaluation
 
-```js
-const x = "Hello";
-const y = "";
-const z = 0;
+-   In JavaScript, short-circuit evaluation is a technique that allows you to use logical operators (such as && and ||) to perform conditional evaluations in a concise way.
 
-if (x) {
-    console.log("x is truthy");
-}
+-   The && operator (logical AND) returns the first operand if it is "falsy", or the second operand if the first operand is "truthy", and the second operand is "falsy".
 
-if (y) {
-    console.log("y is truthy");
-} else {
-    console.log("y is falsy");
-}
-
-if (z) {
-    console.log("z is truthy");
-} else {
-    console.log("z is falsy");
-}
-
-// Output:
-// "x is truthy"
-// "y is falsy"
-// "z is falsy"
-```
-
-In this example, the variable x is a non-empty string, which is considered truthy, so the first if statement is executed. The variable y is an empty string, which is considered falsy, so the else block of the second if statement is executed. The variable z is the number 0, which is considered falsy, so the else block of the third if statement is executed.
-
-#### Short Circuit Evaluation (optional)
-
-Vanilla JS
-
-In JavaScript, short-circuit evaluation is a technique that allows you to use logical operators (such as && and ||) to perform conditional evaluations in a concise way.
-
-The && operator (logical AND) returns the first operand if it is "falsy", or the second operand if the first operand is "truthy".
-
-For example:
+##### Example
 
 ```js
 const x = 0;
@@ -1423,21 +1401,21 @@ console.log(x && y); // Output: 0 (the first operand is falsy, so it is returned
 console.log(y && x); // Output: 0 (the second operand is falsy, so it is returned)
 ```
 
-The || operator (logical OR) returns the first operand if it is "truthy", or the second operand if the first operand is "falsy".
+-   The || operator (logical OR) returns the first operand if it is "truthy", or the second operand if the first operand is "falsy", and the second is "truthy".
 
-For example:
+##### Example
 
 ```js
 const x = 0;
 const y = 1;
 
-console.log(x || y); // Output: 1 (the first operand is falsy, so the second operand is returned)
 console.log(y || x); // Output: 1 (the first operand is truthy, so it is returned)
+console.log(x || y); // Output: 1 (the second operand is truthy, so it is returned)
 ```
 
-Short-circuit evaluation can be useful in cases where you want to perform a certain action only if a certain condition is met, or you want to return a default value if a certain condition is not met.
+-   Short-circuit evaluation can be useful in cases where you want to perform a certain action only if a certain condition is met, or you want to return a default value if a certain condition is not met.
 
-For example:
+##### Example
 
 ```js
 function displayName(name) {
@@ -1448,42 +1426,37 @@ console.log(displayName("Pizza")); // Output: "Pizza"
 console.log(displayName()); // Output: "Anonymous"
 ```
 
-In this example, the displayName() function returns the name property of the user object if it exists, or "Anonymous" if the name property is not present. This is done using the || operator and short-circuit evaluation.
+-   In this example, the displayName() function returns the name property of the user object if it exists, or "Anonymous" if the name property is not present. This is done using the || operator and short-circuit evaluation.
 
-#### Short Circuit Evaluation React - Basics
+### Short Circuit Evaluation React - Basics
 
 ```js
 import Starter from "./tutorial/03-conditional-rendering/starter/04-short-circuit-overview.jsx";
 ```
 
-Setup Challenge :
+#### Setup Challenge :
 
--   create two state values
--   one "falsy" and second "truthy"
--   setup both conditions for each operator in JSX - hint {}
-    -   || OR
-    -   && AND
+-   create two state values.
+-   one "falsy" and second "truthy".
+-   setup both conditions for each operator in JSX - hint is to use { }.
+    -   `||` OR
+    -   `&&` AND
 
 ```js
 import { useState } from "react";
 
 const ShortCircuitOverview = () => {
-    // falsy
-    const [text, setText] = useState("");
-    // truthy
-    const [name, setName] = useState("susan");
+    const [text, setText] = useState(""); // falsy
+    const [name, setName] = useState("susan"); // truthy
 
     const codeExample = text || "hello world";
 
-    // can't use if statements
     return (
         <div>
-            {/* {if(someCondition){"won't work"}} */}
-
+            <h4>Falsy AND : {text && "hello world"}</h4>
+            <h4>Truthy AND : {name && "hello world"}</h4>
             <h4>Falsy OR : {text || "hello world"}</h4>
-            <h4>Falsy AND {text && "hello world"}</h4>
-            <h4>Truthy OR {name || "hello world"}</h4>
-            <h4>Truthy AND {name && "hello world"}</h4>
+            <h4>Truthy OR : {name || "hello world"}</h4>
             {codeExample}
         </div>
     );
@@ -1491,97 +1464,76 @@ const ShortCircuitOverview = () => {
 export default ShortCircuitOverview;
 ```
 
-#### Short Circuit Evaluation in React - Common Approaches
+### Short Circuit Evaluation in React - Common Approaches
 
 ```js
 import Starter from "./tutorial/03-conditional-rendering/starter/05-short-circuit-examples.jsx";
 ```
 
-Vanilla JS (Optional)
-The ! operator is a logical operator in JavaScript that negates a boolean value. It is equivalent to the not operator in other programming languages.
+-   We cannot use if else statements inside JSX, therefore need to use logical operators.
+-   OR operator is used to set a default value, if the value does not exist.
+-   AND operator is used to control what is displayed on the screen.
+-   We can also use `!` (not) operator.
 
-For example:
-
-```js
-let isTrue = true;
-let isFalse = false;
-
-console.log(!isTrue); // outputs: false
-console.log(!isFalse); // outputs: true
-```
-
-You can use the ! operator to test if a value is not truthy or falsy:
-
-```js
-let val = 0;
-if (!val) {
-    console.log("val is falsy");
-}
-```
-
-You can also use the ! operator to convert a value to a boolean and negate it:
-
-```js
-let val = "hello";
-let bool = !val; // bool is now false
-
-val = "";
-bool = !val; // bool is now true
-```
+#### Example
 
 ```js
 import { useState } from "react";
 
-const ShortCircuitOverview = () => {
-    // falsy
+const ShortCircuitExamples = () => {
     const [text, setText] = useState("");
-    // truthy
     const [name, setName] = useState("susan");
-    const [user, setUser] = useState({ name: "john" });
+    const [user, setUser] = useState({ name: "John" });
     const [isEditing, setIsEditing] = useState(false);
 
-    // can't use if statements
     return (
         <div>
-            <h2>{text || "default value"}</h2>
+            <h2>{text || "default-value"}</h2>
+
             {text && (
                 <div>
-                    <h2> whatever return</h2>
-                    <h2>{name}</h2>
+                    <h2>Example</h2>
+                    <p>Return this div, if text exists</p>
                 </div>
             )}
-            {/* more info below */}
-            {!text && (
+            {/* {!text && (
                 <div>
-                    <h2> whatever return</h2>
-                    <h2>{name}</h2>
+                    <h2>Example</h2>
                 </div>
-            )}
-            {user && <SomeComponent name={user.name} />}
-            <h2 style={{ margin: "1rem 0" }}>Ternary Operator</h2>
-            <button className='btn'>{isEditing ? "edit" : "add"}</button>
-            {user ? (
-                <div>
-                    <h4>hello there user {user.name}</h4>
-                </div>
-            ) : (
-                <div>
-                    <h2>please login</h2>
-                </div>
-            )}
+            )} */}
         </div>
     );
+};
+
+export default ShortCircuitExamples;
+```
+
+-   Below is an example to show the component, if the user state value exists (if user value is truthy!).
+-   Real life use case is that we fetch a user from the database, and if the user exists, the component is displayed, else the component is not displayed if the user does not exist and null value is returned from the database.
+
+#### Example
+
+```js
+import { useState } from "react";
+
+const ShortCircuitExamples = () => {
+    const [text, setText] = useState("");
+    const [name, setName] = useState("susan");
+    const [user, setUser] = useState({ name: "John" });
+    const [isEditing, setIsEditing] = useState(false);
+
+    return <div>{user && <SomeComponent name={user.name} />}</div>;
 };
 
 const SomeComponent = ({ name }) => {
     return (
         <div>
-            <h4>hello there, {name}</h4>
-            <button className='btn'>log out</button>
+            <h2>Example</h2>
+            <h2>{name}</h2>
         </div>
     );
 };
-export default ShortCircuitEvaluation;
+export default ShortCircuitExamples;
 ```
 
 #### Ternary Operator
