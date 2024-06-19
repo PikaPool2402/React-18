@@ -1708,38 +1708,45 @@ export default UserChallenge;
 
 ## Project Structure - Default Export
 
-/tutorial/04-project-structure/starter
+#### Option #1:
 
-There are more options
+-   create "components" and "screens" folders.
 
-Normally somewhere in the src
+    -   `/components/componentName.jsx`
+    -   `/screens/componentName.jsx`
 
-/components/componentName.jsx
-/screens/componentName.jsx
+#### Option #2:
 
--   create navbar folder
+-   Keep all the files associated with a component inside one folder.
+-   create "Navbar" folder for "Navbar" Component.
 
-    -   setup Navbar.jsx (component)
-    -   Navbar.css (styles)
+    -   setup `Navbar.jsx` (component)
+    -   setup `Navbar.css` (styles)
 
--   import in App.jsx
+-   import the component in App.jsx
 
-import Final from 'pathToFolder/Navbar/Navbar'
+```js
+// problem is we need to write Navbar/Navbar twice!
+import "./tutorial/04-project-structure/final/Navbar/Navbar";
+```
 
--   first solution rename to index.jsx(entry point)
+#### Solution
 
-Works but eventually too many index tabs :):):)
+-   create `index.js`
+-   "index" files act as the default entry point, if no file is specified in the folder.
+-   `import "./tutorial/04-project-structure/final/Navbar";`, automatically redirects to `index.js` inside the "Navbar" folder, if no file is specified.
 
--   rename back to Navbar.jsx
--   create index.jsx
+-   but, the new problem is that, we will have a lot of index.js for every component folder, which becomes difficult to distinguish and navigate.
+-   the solution is to export the Navbar component, using the `index.js` file.
+
+##### index.js
 
 ```js
 export { default } from "./Navbar";
+// import the navbar component and export it!
 ```
 
-#### Project Structure - Named Exports
-
-/tutorial/04-project-structure/starter
+## Project Structure - Named Exports
 
 -   only makes sense if you have quite a few files
 

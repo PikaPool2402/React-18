@@ -1,9 +1,11 @@
-import Starter from "./tutorial/02-useEffect/starter/05-cleanup-function";
+// problem is we need to write Navbar/Navbar twice!
+import "./tutorial/04-project-structure/final/Navbar";
+import Navbar from "./tutorial/04-project-structure/final/Navbar";
 
 function App() {
     return (
         <div className='container'>
-            <Starter />
+            <Navbar />
         </div>
     );
 }
