@@ -1,27 +1,34 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from "react";
 
 const CleanupFunction = () => {
-  const [toggle, setToggle] = useState(false);
-  return (
-    <div>
-      <button className='btn' onClick={() => setToggle(!toggle)}>
-        toggle component
-      </button>
-      {toggle && <RandomComponent />}
-    </div>
-  );
-};
-const RandomComponent = () => {
-  useEffect(() => {
-    // console.log('hmm, this is interesting');
-    const intID = setInterval(() => {
-      console.log('hello from interval');
-    }, 1000);
-    // does not stop, keeps going
-    // every time we render component new interval gets created
-    return () => clearInterval(intID);
-  }, []);
+    const [toggle, setToggle] = useState(true);
 
-  return <h1>hello there</h1>;
+    return (
+        <div>
+            <button className='btn' onClick={() => setToggle(!toggle)}>
+                Toggle Component
+            </button>
+            {toggle && <RandomComponent />}
+        </div>
+    );
 };
+
+const RandomComponent = () => {
+    useEffect(() => {
+        console.log("hmm, interesting");
+
+        // setInterval returns an id!
+        const intId = setInterval(() => {
+            // keeps on running after unmounting as well!
+            console.log("hello from interval");
+        }, 1000);
+
+        // cleanup function!
+        return () => {
+            clearInterval(intId);
+        };
+    }, []);
+    return <h1>Hello There!</h1>;
+};
+
 export default CleanupFunction;

@@ -869,132 +869,124 @@ const FetchData = () => {
 export default FetchData;
 ```
 
-### SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP
-
-### SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP
-
 ### Cleanup Function
+
+**Study After Conditional Rendering!**
 
 ```js
 import Starter from "./tutorial/02-useEffect/starter/05-cleanup-function.jsx";
 ```
 
-Will Cover After 03-conditional-rendering
+#### Setup Challenge :
 
--   Setup Challenge :
+-   create a state value
+-   in jsx, return button which toggles the state value
+-   based on some condition return a second component (simple return)
+-   inside second component, create useEffect and run it only on initial render
 
--   create state value
--   in jsx return button which toggles state value
--   based on condition return second component (simple return)
--   inside second component create useEffect and run it only on initial render
+#### Code
 
 ```js
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
 const CleanupFunction = () => {
-    const [toggle, setToggle] = useState(false);
+    const [toggle, setToggle] = useState(true);
+
     return (
         <div>
             <button className='btn' onClick={() => setToggle(!toggle)}>
-                toggle component
+                Toggle Component
             </button>
             {toggle && <RandomComponent />}
         </div>
     );
 };
+
 const RandomComponent = () => {
     useEffect(() => {
-        console.log("hmm, this is interesting");
+        console.log("hmm, interesting");
     }, []);
-    return <h1>hello there</h1>;
+    return <h1>Hello There!</h1>;
 };
+
 export default CleanupFunction;
 ```
 
-Vanilla JS
+-   In the above code, the useEffect function executes everytime we toggle the component.
+-   This means that everytime we toggle the component, it mounts and unmounts repeatedly.
+-   Therefore, the useEffect function also runs multiple times.
+-   We need to set-up a cleanup function in these cases, when the component is being displayed conditionally, and keeps on repeatedly being mounted and unmounted, leading to multiple execution of useEffect function.
+
+#### Setup :
+
+-   `setInterval()` function is used to repeat a block of code at regular intervals.
+-   `setInterval()` function returns an id.
+
+-   When we toggle the component, the setInterval() function keeps on running even after the component is unmounted, as we do not terminate it's invocation.
+-   This can lead to serious issues, and we need a cleanup function to terminate this.
+
+-   For cleanup function, return a function in the useEffect callback function, and whatever is inside the returned function, will be invoked.
+-   The cleanup functions, are executed after the re-render (when the component unmounts).
+-   `clearInterval(id)` is a special method used to terminate the `setInterval()` method.
+
+#### Code
 
 ```js
-const intID = setInterval(() => {
-    console.log("hello from interval");
-}, 1000);
-clearInterval(intID);
-```
-
-```js
-const someFunc = () => {
-    // some logic here
-};
-window.addEventListener("scroll", someFunc);
-window.removeEventListener("scroll", someFunc);
-```
-
-```js
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
 const CleanupFunction = () => {
-    const [toggle, setToggle] = useState(false);
+    const [toggle, setToggle] = useState(true);
+
     return (
         <div>
             <button className='btn' onClick={() => setToggle(!toggle)}>
-                toggle component
+                Toggle Component
             </button>
             {toggle && <RandomComponent />}
         </div>
     );
 };
+
 const RandomComponent = () => {
     useEffect(() => {
-        // console.log('hmm, this is interesting');
-        const intID = setInterval(() => {
+        console.log("hmm, interesting");
+
+        // setInterval returns an id!
+        const intId = setInterval(() => {
+            // keeps on running after unmounting as well!
             console.log("hello from interval");
         }, 1000);
-        // does not stop, keeps going
-        // every time we render component new interval gets created
-        return () => clearInterval(intID);
+
+        // cleanup function!
+        return () => {
+            clearInterval(intId);
+        };
     }, []);
-    return <h1>hello there</h1>;
+    return <h1>Hello There!</h1>;
 };
+
 export default CleanupFunction;
 ```
 
-```js
-useEffect(() => {
-    // console.log('hmm, this is interesting');
-    const someFunc = () => {
-        // some logic here
-    };
-    window.addEventListener("scroll", someFunc);
-    return () => window.removeEventListener("scroll", someFunc);
-}, []);
-```
-
-#### You Might Not Need an Effect
-
-[You Might Not Need an Effect](https://beta.reactjs.org/learn/you-might-not-need-an-effect)
-
--   will still utilize useEffect
--   there is still plenty of code using useEffect
-
--   fetching data
-    replaced by libraries - react query, rtk query, swr or next.js
+#### Example
 
 ```js
-import { useHook } from "library";
+const RandomComponent = () => {
+    useEffect(() => {
+        const someFunc = () => {
+            // some logic is defined!
+        };
+        // event keeps getting added after every re-render!
+        window.addEventListener("scroll", someFunc);
 
-function Example() {
-    const { data, error, isLoading } = useHook("url", fetcher);
-
-    if (error) return <div>failed to load</div>;
-    if (isLoading) return <div>loading...</div>;
-    return <div>hello {data.name}!</div>;
-}
+        return () => {
+            // therefore, we need to remove the event when we unmount!
+            window.removeEventListener("scroll", someFunc);
+        };
+    }, []);
+    return <h1>Hello There!</h1>;
+};
 ```
-
--   rest of them by refactoring code
-
-### SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP
-
-### SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP
 
 ## Multiple Returns
 
