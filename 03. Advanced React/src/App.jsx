@@ -1,11 +1,10 @@
-// problem is we need to write Navbar/Navbar twice!
-import "./tutorial/04-project-structure/final/Navbar";
-import Navbar from "./tutorial/04-project-structure/final/Navbar";
+import { Home, About } from "./tutorial/04-project-structure/final/Pages";
 
 function App() {
     return (
         <div className='container'>
-            <Navbar />
+            <Home />
+            <About />
         </div>
     );
 }

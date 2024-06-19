@@ -1748,19 +1748,24 @@ export { default } from "./Navbar";
 
 ## Project Structure - Named Exports
 
--   only makes sense if you have quite a few files
+-   create "pages" folder.
 
--   create Pages directory
--   setup two components Home.jsx and About.jsx
+-   setup two components "Home.jsx" and "About.jsx".
 
--   import both in the App.jxs
+-   import both of the components in "App.jsx" to display them.
 
-import Home from 'pathToFolder/Pages/Home';
-import About from 'pathToFolder/Pages/About';
+```js
+import Home from "pathToFolder/Pages/Home";
+import About from "pathToFolder/Pages/About";
+```
 
-A lot of work/lines of code
+-   If we have 20 components, will have to write 20 lines of imports.
 
--   create index.jsx
+#### Solution
+
+-   create "index.jsx", and import all of the components in one place.
+
+##### index.jsx
 
 ```js
 import Home from "./Home";
@@ -1769,11 +1774,13 @@ import About from "./About";
 export { Home, About };
 ```
 
-in App.jsx
+##### App.jsx
 
-import {Home, About} from 'pathToFolder/Pages
+```js
+import { Home, About } from "pathToFolder/Pages";
+```
 
-#### Project Structure - Export Group
+## Project Structure - Export Group
 
 /tutorial/04-project-structure/starter
 
