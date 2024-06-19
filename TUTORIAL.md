@@ -1782,19 +1782,21 @@ import { Home, About } from "pathToFolder/Pages";
 
 ## Project Structure - Export Group
 
-/tutorial/04-project-structure/starter
+-   create "Example" folder.
 
--   create Example directory
--   setup two components (setup simple returns) and index.jsx file
--   in index.jsx setup return and render both components (import)
--   import/render index.jsx in App.jsx
+-   setup two components inside the folder, and create "index.jsx" file
 
-#### Project Structure - Extra Extensions
+-   in index.jsx setup a new component and render/import both of the components inside the new component.
 
--   code spell checker - works well with code and documents.
--   glean - easy extract JSX into a new component
+-   import/render "index.jsx" in "App.jsx" to display the group of components.
 
-#### Leverage Javascript
+## Project Structure - Extra Extensions
+
+-   **Code Spell Checker** - works well with code and documents.
+
+-   **Glean** - easily extract jsx into a new component.
+
+## Leverage Javascript
 
 [Javascript Nuggets -Optional Chaining](https://www.youtube.com/watch?v=PuEGrylM1x8&list=PLnHJACx3NwAfRUcuKaYhZ6T5NRIpzgNGJ&index=12&t=254s)
 

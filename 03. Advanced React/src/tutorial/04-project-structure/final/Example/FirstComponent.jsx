@@ -1,4 +1,4 @@
 const FirstComponent = () => {
-  return <div>FirstComponent</div>;
+    return <div>FirstComponent</div>;
 };
 export default FirstComponent;

@@ -1,10 +1,9 @@
-import { Home, About } from "./tutorial/04-project-structure/final/Pages";
+import Example from "./tutorial/04-project-structure/final/Example";
 
 function App() {
     return (
         <div className='container'>
-            <Home />
-            <About />
+            <Example />
         </div>
     );
 }
