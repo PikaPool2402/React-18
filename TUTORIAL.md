@@ -2124,76 +2124,81 @@ import Starter from "./tutorial/06-forms/starter/02-user-challenge.jsx";
 #### Setup :
 
 -   setup controlled input (name input)
--   setup onSubmit (for now just placeholder)
--   import data array (first array) from data
--   create another state value (data as default)
--   iterate over and display right after form (h4)
--   when user submits the form add new person to the list
+-   setup onSubmit (for now just log success)
+-   import data array (first array) from data.js
+-   create another state value (set data as default)
+-   iterate over the data array and display the users after the form
+-   when the user submits the form, add a new person to the data array and display them
 
--   Extra Challenge
-    -   add button and setup functionality to remove user
+-   Extra Challenge: add a button and setup functionality to remove a particular user
+
+#### Code
 
 ```js
 import { useState } from "react";
 import { data } from "../../../data";
+
 const UserChallenge = () => {
     const [name, setName] = useState("");
     const [users, setUsers] = useState(data);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // do something
-        console.log(name);
-        // if no value, do nothing
+
         if (!name) return;
-        // if value, setup new user and add to current users
+        // return if empty submission!
+
         const fakeId = Date.now();
-        console.log(fakeId);
-        // const newUser = { id: fakeId, name: name };
-        const newUser = { id: fakeId, name };
-        const updatedUsers = [...users, newUser];
-        setUsers(updatedUsers);
-        // set back to empty
-        setName("");
+        // dummy, don't use in real-projects!
+
+        const newUser = { id: fakeId, name: name };
+        setUsers([...data, newUser]);
+
+        setName(""); // clear the input field!
+        console.log("form submitted!");
     };
 
     const removeUser = (id) => {
-        const updatedUsers = users.filter((person) => person.id !== id);
-        setUsers(updatedUsers);
+        const newUser = users.filter((person) => {
+            return person.id !== id;
+        });
+        setUsers(newUser);
     };
+
     return (
         <div>
             <form className='form' onSubmit={handleSubmit}>
                 <h4>Add User</h4>
                 <div className='form-row'>
                     <label htmlFor='name' className='form-label'>
-                        name
+                        Name
                     </label>
                     <input
                         type='text'
                         className='form-input'
+                        id='name'
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        id='name'
                     />
                 </div>
 
                 <button type='submit' className='btn btn-block'>
-                    submit
+                    Submit
                 </button>
             </form>
-            {/* render users */}
-            <h2>users</h2>
 
+            <h2>Users</h2>
             {users.map((user) => {
                 return (
                     <div key={user.id}>
                         <h4>{user.name}</h4>
                         <button
-                            onClick={() => removeUser(user.id)}
                             className='btn'
+                            onClick={() => {
+                                removeUser(user.id);
+                            }}
                         >
-                            remove
+                            Remove
                         </button>
                     </div>
                 );
@@ -2204,15 +2209,15 @@ const UserChallenge = () => {
 export default UserChallenge;
 ```
 
-#### Multiple Inputs
+### Multiple Inputs
 
 ```js
 import Starter from "./tutorial/06-forms/starter/03-multiple-inputs.jsx";
 ```
 
-[Javascript Nuggets - Dynamic Object Keys](https://www.youtube.com/watch?v=_qxCYtWm0tw&list=PLnHJACx3NwAfRUcuKaYhZ6T5NRIpzgNGJ&index=3&t=97s)
+-   [Javascript Nuggets - Dynamic Object Keys](https://www.youtube.com/watch?v=_qxCYtWm0tw&list=PLnHJACx3NwAfRUcuKaYhZ6T5NRIpzgNGJ&index=3&t=97s)
 
--   inputs must have name attribute
+-   inputs must have the "name" attribute!
 
 ```js
 import { useState } from "react";
