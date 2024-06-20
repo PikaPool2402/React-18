@@ -2366,9 +2366,64 @@ export default MultipleInputs;
 import Starter from "./tutorial/06-forms/starter/04-other-inputs.jsx";
 ```
 
+-   Take a look at checkbox input!
+
+-   Also look at select input (list of options)!
+
+#### Checkbox
+
 ```js
 import { useState } from "react";
 const frameworks = ["react", "angular", "vue", "svelte"];
+
+const OtherInputs = () => {
+    const [shipping, setShipping] = useState(false);
+
+    const handleShipping = (e) => {
+        console.log(e.target.checked);
+        setShipping(e.target.checked);
+    };
+
+    return (
+        <div>
+            <form className='form'>
+                <h4>Other Inputs</h4>
+                {/* name */}
+                <div className='form-row' style={{ textAlign: "left" }}>
+                    <label htmlFor='shipping'>Free Shipping </label>
+                    <input
+                        type='checkbox'
+                        name='shipping'
+                        id='shipping'
+                        checked={shipping}
+                        onChange={handleShipping}
+                    />
+                </div>
+                <div className='form-row' style={{ textAlign: "left" }}>
+                    <label htmlFor='framework' className='form-label'>
+                        Framework
+                    </label>
+                </div>
+                <button type='submit' className='btn btn-block'>
+                    Submit
+                </button>
+            </form>
+        </div>
+    );
+};
+export default OtherInputs;
+```
+
+-   For checkbox, we use the "checked" attribute instead of the "value" attribute
+
+-   The checked attribute returns true or false, depending whether checkbox ticked or not
+
+#### Select List
+
+```js
+import { useState } from "react";
+const frameworks = ["react", "angular", "vue", "svelte"];
+
 const OtherInputs = () => {
     const [shipping, setShipping] = useState(false);
     const [framework, setFramework] = useState("react");
@@ -2380,20 +2435,21 @@ const OtherInputs = () => {
     const handleFramework = (e) => {
         setFramework(e.target.value);
     };
+
     return (
         <div>
             <form className='form'>
                 <h4>Other Inputs</h4>
                 {/* name */}
                 <div className='form-row' style={{ textAlign: "left" }}>
+                    <label htmlFor='shipping'>Free Shipping </label>
                     <input
                         type='checkbox'
-                        checked={shipping}
-                        id='shipping'
                         name='shipping'
+                        id='shipping'
+                        checked={shipping}
                         onChange={handleShipping}
                     />
-                    <label htmlFor='shipping'> Free Shipping </label>
                 </div>
                 <div className='form-row' style={{ textAlign: "left" }}>
                     <label htmlFor='framework' className='form-label'>
@@ -2411,7 +2467,7 @@ const OtherInputs = () => {
                     </select>
                 </div>
                 <button type='submit' className='btn btn-block'>
-                    submit
+                    Submit
                 </button>
             </form>
         </div>
@@ -2420,13 +2476,17 @@ const OtherInputs = () => {
 export default OtherInputs;
 ```
 
-#### FormData API
+-   Set up state value that represents what option the user has selected
+
+-   The "value" attribute of the "select" tag represents the currently selected value
+
+### FormData API
 
 ```js
 import Starter from "./tutorial/06-forms/starter/05-form-data.jsx";
 ```
 
-[JS Nuggets - FormData API](https://youtu.be/5-x4OUM-SP8)
+-   [JS Nuggets - FormData API](https://youtu.be/5-x4OUM-SP8)
 
 -   a great solution when you have bunch of inputs
 -   inputs must have name attribute
