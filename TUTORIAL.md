@@ -2604,9 +2604,24 @@ export default UncontrolledInputs;
 import Starter from "./tutorial/07-useRef/starter/01-useRef-basics.jsx";
 ```
 
--   DOES NOT TRIGGER RE-RENDER
--   preserves the value between renders
--   target DOM nodes/elements
+-   it is a lot like useState, preserves the value between renders
+
+-   used to access DOM nodes/elements
+
+-   DOES NOT TRIGGER A RE-RENDER!
+
+#### Setup :
+
+-   think of useRef like a container
+-   can be used to submit a form, with uncontrolled inputs
+-   useRef returns an object, that contains a "current" property
+-   the current property is equal to the default value that is provided
+-   we have two ways to set the value:
+
+    -   set refContainer equal to any of the DOM nodes
+    -   using some kind of functionality
+
+#### Example
 
 ```js
 import { useEffect, useRef, useState } from "react";

@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 
 const UseRefBasics = () => {
     const [value, setValue] = useState(0);
+    const refContaniner = useRef(null);
+    console.log(refContaniner);
 
     const handleSubmit = (e) => {
         e.preventDefault();
