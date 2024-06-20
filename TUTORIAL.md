@@ -2618,43 +2618,31 @@ import Starter from "./tutorial/07-useRef/starter/01-useRef-basics.jsx";
 -   the current property is equal to the default value that is provided
 -   we have two ways to set the value:
 
-    -   set refContainer equal to any of the DOM nodes
+    -   set refContainer equal to any of the DOM nodes (using "ref" attribute)
     -   using some kind of functionality
 
-#### Example
+#### Example #1
 
 ```js
 import { useEffect, useRef, useState } from "react";
 
 const UseRefBasics = () => {
     const [value, setValue] = useState(0);
-    const refContainer = useRef(null);
-
-    console.log(refContainer);
-    // {current:null}
-    // set value ourselves or DOM node
+    const refContaniner = useRef(null);
+    console.log(refContaniner);
+    // shows null, as it is invoked before the component is mounted!
 
     useEffect(() => {
-        // console.log(refContainer.current);
-        refContainer.current.focus();
+        console.log(refContaniner);
+        // shows the form element, as it is invoked after component mounted!
     });
-
-    const isMounted = useRef(false);
-
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(refContainer.current);
-        const name = refContainer.current.value;
+
+        // access the current property, which contains a DOM element!
+        const name = refContaniner.current.value;
         console.log(name);
     };
-
-    useEffect(() => {
-        if (!isMounted.current) {
-            isMounted.current = true;
-            return;
-        }
-        console.log("re-render");
-    }, [value]);
 
     return (
         <div>
@@ -2666,17 +2654,18 @@ const UseRefBasics = () => {
                     <input
                         type='text'
                         id='name'
-                        ref={refContainer}
                         className='form-input'
+                        ref={refContaniner}
+                        // set the useRef hook equal to a DOM node!
                     />
                 </div>
                 <button type='submit' className='btn btn-block'>
-                    submit
+                    Submit
                 </button>
             </form>
-            <h1>value : {value}</h1>
+            <h1>Value : {value}</h1>
             <button onClick={() => setValue(value + 1)} className='btn'>
-                increase
+                Increase
             </button>
         </div>
     );
@@ -2685,7 +2674,63 @@ const UseRefBasics = () => {
 export default UseRefBasics;
 ```
 
-#### Custom Hooks
+-   Avoid running a certain functionality, during the initial render!
+
+-   useRef does not trigger re-render, therefore no need to pass empty dependency array in useEffect to avoid infinite loop!
+
+#### Example #2
+
+```js
+import { useEffect, useRef, useState } from "react";
+
+const UseRefBasics = () => {
+    const [value, setValue] = useState(0);
+    const isMounted = useRef(false);
+
+    useEffect(() => {
+        // initial render
+        if (!useRef.current) {
+            useRef.current = true;
+            return;
+        }
+        // state re-renders
+        console.log(isMounted);
+    }, [value]);
+
+    return (
+        <div>
+            <form className='form'>
+                <div className='form-row'>
+                    <label htmlFor='name' className='form-label'>
+                        Name
+                    </label>
+                    <input type='text' id='name' className='form-input' />
+                </div>
+                <button type='submit' className='btn btn-block'>
+                    Submit
+                </button>
+            </form>
+            <h1>Value : {value}</h1>
+            <button onClick={() => setValue(value + 1)} className='btn'>
+                Increase
+            </button>
+        </div>
+    );
+};
+
+export default UseRefBasics;
+```
+
+#### Focus On Input Field
+
+```js
+useEffect(() => {
+    refContainer.current.focus();
+    // focus on the input, when page loads
+});
+```
+
+### Custom Hooks
 
 ```js
 import Starter from "./tutorial/08-custom-hooks/starter/01-toggle.jsx";
