@@ -2480,7 +2480,7 @@ export default OtherInputs;
 
 -   The "value" attribute of the "select" tag represents the currently selected value
 
-### FormData API
+### FormData API (Optional)
 
 ```js
 import Starter from "./tutorial/06-forms/starter/05-form-data.jsx";
@@ -2488,10 +2488,17 @@ import Starter from "./tutorial/06-forms/starter/05-form-data.jsx";
 
 -   [JS Nuggets - FormData API](https://youtu.be/5-x4OUM-SP8)
 
--   a great solution when you have bunch of inputs
--   inputs must have name attribute
+-   a nifty alternative to controlled inputs!
 
-The FormData interface provides a way to construct a set of key/value pairs representing form fields and their values, which can be sent using the fetch() or XMLHttpRequest.send() method. It uses the same format a form would use if the encoding type were set to "multipart/form-data".
+-   a great solution when you have bunch of inputs!
+
+-   help us to submit the form with uncontrolled inputs, without referencing state values!
+
+-   The FormData interface provides a way to construct a set of key/value pairs representing form fields and their values, which can be sent using the fetch() or XMLHttpRequest.send() method. It uses the same format a form would use if the encoding type were set to "multipart/form-data".
+
+-   inputs must have the "name" attribute
+
+#### Code
 
 ```js
 import { useState } from "react";
@@ -2503,17 +2510,29 @@ const UncontrolledInputs = () => {
         e.preventDefault();
 
         const formData = new FormData(e.currentTarget);
-        // const name = formData.get('name');
-        // console.log(name);
-        // console.log([...formData.entries()]);
+        // pass in a form element in the API!
+        console.log(formData);
+
+        // how to access the values?
+        const email = formData.get("email");
+        // pass in the value inside the "name" attribute of the input field!
+        console.log(email);
+
+        // alternative approach!
+        console.log([...formData.entries()]);
+        // each field and it's value is an array!
+        // store all of these arrays in an array!
+        // therefore, returns an array of arrays!
+
+        // best approach!
         const newUser = Object.fromEntries(formData);
-        // do something (post request, add to list, etc)
         console.log(newUser);
-        // Gotcha - re-render won't clear out the values
-        setValue(value + 1);
-        // reset values
-        e.currentTarget.reset();
+
+        // clear the input fields!
+        setValue(value + 1); // to re-render the application!
+        e.currentTarget.reset(); // reset the form values!
     };
+
     return (
         <div>
             <form className='form' onSubmit={handleSubmit}>
@@ -2521,7 +2540,7 @@ const UncontrolledInputs = () => {
                 {/* name */}
                 <div className='form-row'>
                     <label htmlFor='name' className='form-label'>
-                        name
+                        Name
                     </label>
                     <input
                         type='text'
@@ -2556,7 +2575,7 @@ const UncontrolledInputs = () => {
                 </div>
 
                 <button type='submit' className='btn btn-block'>
-                    submit
+                    Submit
                 </button>
             </form>
         </div>
@@ -2565,31 +2584,21 @@ const UncontrolledInputs = () => {
 export default UncontrolledInputs;
 ```
 
--   e.currentTarget
+##### Note #1
 
-In React, e.currentTarget returns the DOM element that triggered the event.
+-   e.target refers to the DOM element, that fires off the event.
+-   e.currentTarget refers to the DOM element, to which the event listener is attached to (in this case the form).
 
--   Object From Entries
+##### Note #2
 
-The Object.fromEntries() static method transforms a list of key-value pairs into an object.
+-   FormData API help us easily access all of the inputs as well as their values in our form.
+-   `Object.fromEntries("form-element")` - converts an array of key value pairs, into an object of key value pairs.
 
-```js
-const entries = new Map([
-    ["foo", "bar"],
-    ["baz", 42],
-]);
+##### Note #3
 
-const obj = Object.fromEntries(entries);
+-   The reset() method is a built-in method in HTML that can be used to reset all form controls to their initial values. When this method is called on a form element, it will clear any user-entered data and reset the values of all form elements to their default values.
 
-console.log(obj);
-// Expected output: Object { foo: "bar", baz: 42 }
-```
-
--   reset()
-
-The reset() method is a built-in method in HTML that can be used to reset all form controls to their initial values. When this method is called on a form element, it will clear any user-entered data and reset the values of all form elements to their default values.
-
-#### useRef
+### useRef Hook
 
 ```js
 import Starter from "./tutorial/07-useRef/starter/01-useRef-basics.jsx";
