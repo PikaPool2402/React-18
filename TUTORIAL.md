@@ -2004,14 +2004,18 @@ import Starter from "./tutorial/06-forms/starter/01-controlled-inputs.jsx";
 
 #### Setup (For All Form Videos!)
 
+-   The `htmlFor` attribute of `<label>` tag, and the `id` attribute of the `<input>` tag must match!
+
+-   The below is going to be the same set-up for further videos!
+
 ```js
 const ControlledInputs = () => {
     return (
         <form className='form'>
-            <h4>controlled inputs</h4>
+            <h4>Controlled Inputs</h4>
             <div className='form-row'>
                 <label htmlFor='name' className='form-label'>
-                    name
+                    Name
                 </label>
                 <input type='text' className='form-input' id='name' />
             </div>
@@ -2022,7 +2026,7 @@ const ControlledInputs = () => {
                 <input type='email' className='form-input' id='email' />
             </div>
             <button type='submit' className='btn btn-block'>
-                submit
+                Submit
             </button>
         </form>
     );
@@ -2030,46 +2034,55 @@ const ControlledInputs = () => {
 export default ControlledInputs;
 ```
 
-#### Controlled Inputs - Complete
+### Controlled Inputs - Complete
 
 ```js
 import Starter from "./tutorial/06-forms/starter/01-controlled-inputs.jsx";
 ```
 
--   setup state values
--   add value and onChange to each input
--   setup onSubmit
+-   Whenever you hear controlled inputs, think there is going to be a state value.
+-   Either all inputs can have one state value, or we can have seperate state value for each input.
+-   Whenever we write something in the input field, we change the state value as well, and then can use this value for further processing.
+
+#### Setup Challenge :
+
+-   setup state values for each input field
+-   add value attribute, and onChange attribute to each input field
+-   value should be equal to the state value, onChange is used to handle the input
+
+-   BOTH value, onChange must be present to executre controlled inputs!
+
+-   The "value" attribute is used differently for different input types:
+
+    -   For "button", "reset", and "submit" - it defines the text on the button
+    -   For "text", "password", and "hidden" - it defines the initial (default) value of the input field, it also stores the current value inside the input field that is typed.
+    -   For "checkbox", "radio", "image" - it defines the value associated with the input (this is also the value that is sent on submit)
 
 ```js
 import { useState } from "react";
+
 const ControlledInputs = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
 
-    // const handleChange = (e) => {
-    //   // for now we won't use it
-    //   const name = e.target.name;
-    //   const value = e.target.value;
-    // };
-
     const handleSubmit = (e) => {
         e.preventDefault();
-        // do something
         console.log(name, email);
     };
+
     return (
         <form className='form' onSubmit={handleSubmit}>
-            <h4>controlled inputs</h4>
+            <h4>Controlled Inputs</h4>
             <div className='form-row'>
                 <label htmlFor='name' className='form-label'>
-                    name
+                    Name
                 </label>
                 <input
                     type='text'
                     className='form-input'
+                    id='name'
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    id='name'
                 />
             </div>
             <div className='form-row'>
@@ -2085,7 +2098,7 @@ const ControlledInputs = () => {
                 />
             </div>
             <button type='submit' className='btn btn-block'>
-                submit
+                Submit
             </button>
         </form>
     );
@@ -2093,11 +2106,22 @@ const ControlledInputs = () => {
 export default ControlledInputs;
 ```
 
-#### User Challenge
+-   When the user types something in the input field, the "value" attribute changes, and the value of this "value" attribute is set equal to the corresponding state value, and then this state value is used for further processing.
+
+-   We can access the value inside the "value" attribute using the event object - "e" (e.target.value)
+
+    -   target returns the element that triggered the event
+    -   value returns the value inside the "value" attribute of the target element.
+
+-   Therefore, if we are specifying the "value" attribute, it must be equal to the state value, as it needs to be changed everytime we type something. Else, we can avoid specifying the "value" attribute as well.
+
+### User Challenge
 
 ```js
 import Starter from "./tutorial/06-forms/starter/02-user-challenge.jsx";
 ```
+
+#### Setup :
 
 -   setup controlled input (name input)
 -   setup onSubmit (for now just placeholder)
