@@ -1798,31 +1798,104 @@ import { Home, About } from "pathToFolder/Pages";
 
 ## Leverage Javascript
 
-[Javascript Nuggets -Optional Chaining](https://www.youtube.com/watch?v=PuEGrylM1x8&list=PLnHJACx3NwAfRUcuKaYhZ6T5NRIpzgNGJ&index=12&t=254s)
+```js
+import Example from "./tutorial/05-leverage-javascript/final/List";
+```
 
-/tutorial/05-leverage-javascript/starter
+-   [Javascript Nuggets - Optional Chaining](https://www.youtube.com/watch?v=PuEGrylM1x8&list=PLnHJACx3NwAfRUcuKaYhZ6T5NRIpzgNGJ&index=12&t=254s)
 
-Setup Challenge
+#### Code
 
--   take a look at the people in array in data.js
--   create List.jsx component
--   in List.jsx import and iterate over people (data)
--   for now just render name
--   once you have list setup separate Person.jsx component
-    -   try glean extension
--   in Person render
-    -   name, nickName, image
+```js
+// more straightforward syntax, for working with deeply-nested properties.
+// used when some properties are not present in all of the objects.
 
-Yes, there will be a bug.
+const people = [
+    {
+        name: "bob",
+        location: { street: "123 main street", timezone: { offset: "+7:00" } },
+    },
+    { name: "peter", location: { street: "123 Pine street" } },
+    {
+        name: "susan",
+        location: { street: "123 Apple street", timezone: { offset: "+9:00" } },
+    },
+];
+
+people.forEach((person) => {
+    console.log(person.name);
+    console.log(person.location);
+
+    // console.log(person.location.timezone.offset);
+    // throws error, as all of the objects do not have this property!
+});
+
+people.forEach((person) => {
+    // console.log(
+    //     person.location && person.location.timezone && person.location.offset
+    // );
+
+    // ALTERNATIVE
+    console.log(person?.location?.timezone?.offset);
+    // check for person, if present check for location, and so on!
+    // return undefined if the property is not present, instead of an error!
+});
+```
+
+#### Setup Challenge :
+
+-   analyze people array in data.js
+
+-   create a new component, List.jsx component
+-   in List.jsx import and iterate over the people array
+-   render the name property in List.jsx component
+
+-   now, set-up Person.jsx component
+-   in this component, render the name, nickName, image
+
+-   Yes, you will encounter a bug.
+
+```js
+import List from "./tutorial/05-leverage-javascript/final/List";
+
+function App() {
+    return (
+        <div className='container'>
+            <List />
+        </div>
+    );
+}
+
+export default App;
+```
+
+#### App.jsx
+
+```js
+import List from "./tutorial/05-leverage-javascript/final/List";
+
+function App() {
+    return (
+        <div className='container'>
+            <List />
+        </div>
+    );
+}
+
+export default App;
+```
+
+#### List.jsx
 
 ```js
 import { people } from "../../../data";
+import { Person } from "./Person";
 
 const List = () => {
     return (
         <div>
             {people.map((person) => {
-                return <div>{person.name}</div>;
+                return <Person {...person} key={person.id} />;
             })}
         </div>
     );
@@ -1830,55 +1903,30 @@ const List = () => {
 export default List;
 ```
 
-List.jsx
-
-```js
-import { people } from "../../../data";
-import Person from "./Person";
-const List = () => {
-    return (
-        <div>
-            {people.map((person) => {
-                return <Person key={person.name} {...person} />;
-            })}
-        </div>
-    );
-};
-export default List;
-```
-
-Person.jsx
+#### Person.jsx
 
 ```js
 import React from "react";
-import avatar from "../../../assets/default-avatar.svg";
 
-export function Person({ name, nickName = "shakeAndBake", images }) {
-    // before optional chaining
-
-    // const img =
-    //   (images && images[0] && images[0].small && images[0].small.url) || avatar;
-    // Combining with the nullish coalescing operator ??
-    // const img = images?.[0]?.small?.url ?? avatar;
-    // ?? vs || - please utilize the search engine
-
-    const img = images?.[0]?.small?.url || avatar;
+export const Person = ({ name, nickName, image }) => {
+    const img = image[0].small.url;
+    // throws an error, as property does not exist for all objects!
 
     return (
         <div>
             <img src={img} alt={name} style={{ width: "50px" }} />
-            <h4>{name} </h4>
+            <h4>{name}</h4>
             <p>Nickname : {nickName}</p>
         </div>
     );
-}
+};
 ```
 
-#### Default Values - Vanilla JS (Optional)
+### Default Values - Vanilla JS
 
-In JavaScript, when defining a function, you can specify default values for its parameters. This means that if a caller of the function does not provide a value for a particular parameter, the default value will be used instead. Default parameters are defined by assigning a value to the parameter in the function definition.
+-   In JavaScript, when defining a function, you can specify default values for its parameters. This means that if a caller of the function does not provide a value for a particular parameter, the default value will be used instead. Default parameters are defined by assigning a value to the parameter in the function definition.
 
-For example, consider the following function, which takes two parameters, x and y, and returns their sum:
+-   For example, consider the following function, which takes two parameters, x and y, and returns their sum:
 
 ```js
 function add(x, y) {
@@ -1886,9 +1934,9 @@ function add(x, y) {
 }
 ```
 
-If we call this function with only one argument, it will return NaN because y is undefined.
+-   If we call this function with only one argument, it will return NaN because y is undefined.
 
-We can set default values for x,y as:
+-   We can set default values for x, y as:
 
 ```js
 function add(x = 0, y = 0) {
@@ -1896,34 +1944,65 @@ function add(x = 0, y = 0) {
 }
 ```
 
-Now, if we call add(3), the function will return 3, because the default value of 0 is used for the y parameter.
+-   Now, if we call add(3), the function will return 3, because the default value of 0 is used for the y parameter.
 
-#### Optional Chaining - Vanilla JS (Optional)
+### Optional Chaining - Vanilla JS
 
-n JavaScript, the optional chaining operator (?.) is a new feature that allows you to access properties of an object without worrying about whether the object or the property is null or undefined. It's a shorthand for a common pattern of checking for null or undefined before accessing an object's property.
+-   In JavaScript, the optional chaining operator (?.) is a new feature that allows you to access properties of an object without worrying about whether the object or the property is null or undefined. It's a shorthand for a common pattern of checking for null or undefined before accessing an object's property. If the property does not exists, it returns undefined instead of throwing an error.
 
-For example, consider the following code, which accesses the firstName property of an object:
+-   For example, consider the following code, which accesses the firstName property of an object:
 
 ```js
 const person = { name: { first: "John", last: "Doe" } };
 console.log(person.name.first);
 ```
 
-If the name property is null or undefined, this code will throw an error. To prevent this, we can use the optional chaining operator:
+-   If the name property is null or undefined, this code will throw an error. To prevent this, we can use the optional chaining operator:
 
 ```js
 console.log(person?.name?.first);
 ```
 
-Now, if the person.name is null or undefined, this code will simply return undefined instead of throwing an error. This make the code more robust and readable.
+-   Now, if the person.name is null or undefined, this code will simply return undefined instead of throwing an error. This make the code more robust and readable.
 
-#### Controlled Inputs - Setup
+### Fix Our Challenge
+
+-   can use "AND" operator, to access the property if it exists.
+-   can use optional chaning as well. check if `images` exist, if yes, check if `images[0]` exists, if yes, check if small property exists, and so on.
+-   can also add default value either in the parameter of the function, or using the `||` operator.
+
+#### Code
+
+```js
+import Avatar from "../../../assets/default-avatar.svg";
+import React from "react";
+
+export const Person = ({ name, nickName = "defaultValue", images }) => {
+    // AND OPERATOR
+    // const img = images && images[0] && images[0].small && images[0].small.url;
+
+    // OPTIONAL CHAINING (with default value!)
+    const img = images?.[0]?.small?.url || Avatar;
+
+    return (
+        <div>
+            <img src={img} alt={name} style={{ width: "50px" }} />
+            <h4>{name}</h4>
+            <p>Nickname : {nickName}</p>
+        </div>
+    );
+};
+```
+
+## Forms In React
+
+### Controlled Inputs - Setup
 
 ```js
 import Starter from "./tutorial/06-forms/starter/01-controlled-inputs.jsx";
 ```
 
-Setup (for all form videos)
+#### Setup (For All Form Videos!)
 
 ```js
 const ControlledInputs = () => {
