@@ -2217,11 +2217,73 @@ import Starter from "./tutorial/06-forms/starter/03-multiple-inputs.jsx";
 
 -   [Javascript Nuggets - Dynamic Object Keys](https://www.youtube.com/watch?v=_qxCYtWm0tw&list=PLnHJACx3NwAfRUcuKaYhZ6T5NRIpzgNGJ&index=3&t=97s)
 
--   inputs must have the "name" attribute!
+#### Code
+
+```js
+// how to add object keys dynamically, using square bracket notation?
+// somewhat similar to how we access array elements, arr[0]!
+
+const person = {
+    name: "john",
+};
+person.age = 25;
+// add a new property, "age: 25"
+
+const items = {
+    "featured-items": ["item1", "item2"],
+};
+console.log(items["featured-items"]);
+// to access string keys, use square brackets instead of "." operator!
+
+console.log(person.name);
+console.log(person["name"]);
+// both display the same thing!
+
+let appState = "loading";
+// set key using square notation!
+
+const app = {
+    [appState]: true,
+    // loading: true
+};
+console.log(app);
+
+// add a new key/property!
+const keyValue = "newKey";
+app[keyValue] = "apple";
+console.log(app);
+
+// USE CASE
+const state = {
+    loading: true,
+    name: "",
+    job: "",
+};
+
+function updateState(key, value) {
+    state[key] = value;
+}
+
+updateState("name", "kush"); // change the value of "name"!
+updateState("job", "student"); // change the value of "job"!
+updateState("city", "new-delhi"); // add a new key "city" with value "new-delhi"!
+```
+
+-   **NOTE: inputs must have the "name" attribute!**
+
+-   We can use a single state (object) for all of the inputs, instead of setting up three seperate state values.
+
+-   If we are setting up a single function for updating the state values on changing the input, we need to keep a track of which input field is being changed.
+
+-   Therefore we need use the "name" attribute to track this.
+
+#### Example
 
 ```js
 import { useState } from "react";
+
 const MultipleInputs = () => {
+    // create a state (object) for all the inputs!
     const [user, setUser] = useState({
         name: "",
         email: "",
@@ -2229,29 +2291,34 @@ const MultipleInputs = () => {
     });
 
     const handleChange = (e) => {
-        setUser({ ...user, [e.target.name]: e.target.value });
-    };
+        console.log(e.target.value);
+        // don't know which input field has the value?
+        // therefore, we will utilize the name attribute!
 
+        setUser({ ...user, [e.target.name]: e.target.value });
+        // the value inside the "name" attribute MUST match the property name inside the state object!
+    };
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(user);
     };
+
     return (
         <div>
             <form className='form' onSubmit={handleSubmit}>
-                <h4>Multiple Inputs</h4>
+                <h4>Multiple Inputs!</h4>
                 {/* name */}
                 <div className='form-row'>
                     <label htmlFor='name' className='form-label'>
-                        name
+                        Name
                     </label>
                     <input
                         type='text'
                         className='form-input'
                         id='name'
-                        name='name'
                         value={user.name}
                         onChange={handleChange}
+                        name='name'
                     />
                 </div>
                 {/* email */}
@@ -2263,12 +2330,12 @@ const MultipleInputs = () => {
                         type='email'
                         className='form-input'
                         id='email'
-                        name='email'
                         value={user.email}
                         onChange={handleChange}
+                        name='email'
                     />
                 </div>
-                {/* password */}
+                {/* email */}
                 <div className='form-row'>
                     <label htmlFor='password' className='form-label'>
                         Password
@@ -2277,14 +2344,14 @@ const MultipleInputs = () => {
                         type='password'
                         className='form-input'
                         id='password'
-                        name='password'
                         value={user.password}
                         onChange={handleChange}
+                        name='password'
                     />
                 </div>
 
                 <button type='submit' className='btn btn-block'>
-                    submit
+                    Submit
                 </button>
             </form>
         </div>
@@ -2293,7 +2360,7 @@ const MultipleInputs = () => {
 export default MultipleInputs;
 ```
 
-#### Other Inputs
+### Other Inputs
 
 ```js
 import Starter from "./tutorial/06-forms/starter/04-other-inputs.jsx";
