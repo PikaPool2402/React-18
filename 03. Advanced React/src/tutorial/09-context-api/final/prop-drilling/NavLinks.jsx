@@ -1,18 +1,19 @@
-import UserContainer from './UserContainer';
+import UserContainer from "./UserContainer";
 
 const NavLinks = ({ user, logout }) => {
-  return (
-    <div className='nav-container'>
-      <ul className='nav-links'>
-        <li>
-          <a href='#'>home</a>
-        </li>
-        <li>
-          <a href='#'>about</a>
-        </li>
-      </ul>
-      <UserContainer user={user} logout={logout} />
-    </div>
-  );
+    return (
+        <div className='nav-container'>
+            <ul className='nav-links'>
+                <li>
+                    <a href='#'>Home</a>
+                </li>
+                <li>
+                    <a href='#'>About</a>
+                </li>
+            </ul>
+            <UserContainer user={user} logout={logout} />
+            {/* pass the props down to the child */}
+        </div>
+    );
 };
 export default NavLinks;

@@ -2970,25 +2970,40 @@ import Starter from "./tutorial/09-context-api/starter";
 
 -   create three components and nest them in such way :
 
--   Navbar.jsx
+-   Navbar.jsx (top-level component)
 
-    -   NavLinks.jsx (nested in Navbar)
-        -   UserContainer.jsx (nested in NavLinks)
+    -   NavLinks.jsx (nested inside Navbar)
 
--   import Navbar.jsx in App.jsx (remove container - CSS)
--   in Navbar.jsx setup
-    -   user state value
-        -   default value {name:'something'}
+        -   UserContainer.jsx (nested inside NavLinks)
+
+-   import Navbar.jsx in App.jsx
+
+-   in Navbar.jsx setup:
+
+    -   a user state value
+        -   default value = {name:'something'}
     -   logout function
-        -   set user back to null
--   pass both of them down to UserContainer.jsx
--   display user and button
--   on button click set user back to null
+        -   function that sets user state back to null
 
--   extra challenge
--   if user null, in UserContainer display <p>please login</p>
+-   pass both of these things down to UserContainer.jsx using prop drilling!
 
-Navbar.jsx
+-   display the user along with the logout button
+
+-   on clicking the button, set the user back to null
+
+-   if user is null, display `<p>Please Login</p>` in UserContainer
+
+#### Purpose
+
+-   the purpose is to show that prop drilling can be a pain in the ass.
+
+-   we will pass down the user state value, along with the logout function using prop drilling to the UserContainer.jsx component!
+
+-   for this, the prop must pass through NavLinks component, as it is the immediate child of NavBar! If several components exist in between, prop drilling can become tedious!
+
+#### Setup Using Prop Drilling!
+
+##### Navbar.jsx
 
 ```js
 import { useState } from "react";
@@ -2996,20 +3011,23 @@ import NavLinks from "./NavLinks";
 
 const Navbar = () => {
     const [user, setUser] = useState({ name: "bob" });
+
     const logout = () => {
         setUser(null);
     };
+
     return (
         <nav className='navbar'>
             <h5>CONTEXT API</h5>
             <NavLinks user={user} logout={logout} />
+            {/* pass the props down to the child */}
         </nav>
     );
 };
 export default Navbar;
 ```
 
-NavLinks.jsx
+##### NavLinks.jsx
 
 ```js
 import UserContainer from "./UserContainer";
@@ -3019,20 +3037,21 @@ const NavLinks = ({ user, logout }) => {
         <div className='nav-container'>
             <ul className='nav-links'>
                 <li>
-                    <a href='#'>home</a>
+                    <a href='#'>Home</a>
                 </li>
                 <li>
-                    <a href='#'>about</a>
+                    <a href='#'>About</a>
                 </li>
             </ul>
             <UserContainer user={user} logout={logout} />
+            {/* pass the props down to the child */}
         </div>
     );
 };
 export default NavLinks;
 ```
 
-UserContainer.jsx
+##### UserContainer.jsx
 
 ```js
 const UserContainer = ({ user, logout }) => {
@@ -3040,9 +3059,9 @@ const UserContainer = ({ user, logout }) => {
         <div className='user-container'>
             {user ? (
                 <>
-                    <p>Hello There, {user.name.toUpperCase()}</p>
+                    <p>Hello There, {user?.name?.toUpperCase()}</p>
                     <button type='button' className='btn' onClick={logout}>
-                        logout
+                        Logout
                     </button>
                 </>
             ) : (

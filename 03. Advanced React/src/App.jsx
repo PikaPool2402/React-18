@@ -1,4 +1,4 @@
-import Starter from "./tutorial/09-context-api/starter/";
+import Starter from "./tutorial/09-context-api/final/context/Navbar";
 
 function App() {
     return (
