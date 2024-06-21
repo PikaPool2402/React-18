@@ -4,6 +4,15 @@ import NavLinks from "./NavLinks";
 
 export const NavbarContext = createContext();
 
+// custom hook!
+import { useContext } from "react";
+
+export const useAppContext = () => {
+    return useContext(NavbarContext);
+    // directly return the object passed in the value!
+};
+// custom hook end!
+
 const Navbar = () => {
     const [user, setUser] = useState({ name: "bob" });
 

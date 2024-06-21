@@ -3209,7 +3209,75 @@ const UserContainer = () => {
 export default UserContainer;
 ```
 
-#### Setup Global Context
+#### Use Custom Hook
+
+-   create a custom hook, to simplify the code even further!
+
+##### Navbar.jsx
+
+```js
+import { createContext } from "react";
+import { useState } from "react";
+import NavLinks from "./NavLinks";
+
+export const NavbarContext = createContext();
+
+// custom hook!
+import { useContext } from "react";
+
+export const useAppContext = () => {
+    return useContext(NavbarContext);
+    // directly return the object passed in the value!
+};
+// custom hook end!
+
+const Navbar = () => {
+    const [user, setUser] = useState({ name: "bob" });
+
+    const logout = () => {
+        setUser(null);
+    };
+
+    return (
+        <NavbarContext.Provider value={{ user: user, logout: logout }}>
+            <nav className='navbar'>
+                <h5>CONTEXT API</h5>
+                <NavLinks />
+            </nav>
+        </NavbarContext.Provider>
+    );
+};
+export default Navbar;
+```
+
+##### UserContainer.jsx
+
+```js
+import { useAppContext } from "./Navbar";
+
+const UserContainer = () => {
+    const { user, logout } = useAppContext();
+    // destructure to grab the properties directly!
+
+    return (
+        <div className='user-container'>
+            {user ? (
+                <>
+                    <p>Hello There, {user.name.toUpperCase()}</p>
+                    <button type='button' className='btn' onClick={logout}>
+                        logout
+                    </button>
+                </>
+            ) : (
+                <p>Please Login</p>
+            )}
+        </div>
+    );
+};
+export default UserContainer;
+```
+
+### Setup Global Context
 
 final code in the repo under w-assets
 
