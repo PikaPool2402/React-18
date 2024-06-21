@@ -3913,39 +3913,80 @@ export default ReducerBasics;
 import Starter from "./tutorial/11-performance/starter/01-lower-state";
 ```
 
-When Component Re-Renders :
+When Does Component Re-Render :
 
--   When the component's state or props change, React will re-render the component to reflect these changes.
+-   When the current component's state or props change, React will re-render the current component to reflect these changes.
 
--   When the parent element re-renders, even if the component's state or props have not changed.
+-   When the parent element re-renders, the child component will re-render even if the child component's state or props have not changed.
 
--   lower state
+#### index.js
 
 ```js
 import { useState } from "react";
-const Counter = () => {
+import { data } from "../../../../data";
+import List from "./List";
+
+const LowerState = () => {
+    const [people, setPeople] = useState(data);
     const [count, setCount] = useState(0);
+
     return (
-        <button
-            className='btn'
-            onClick={() => setCount(count + 1)}
-            style={{ marginBottom: "1rem" }}
-        >
-            count {count}
-        </button>
+        <section>
+            <button
+                className='btn'
+                onClick={() => setCount(count + 1)}
+                style={{ marginBottom: "1rem" }}
+            >
+                Count {count}
+            </button>
+            <List people={people} />
+        </section>
     );
 };
-export default Counter;
+export default LowerState;
 ```
 
-#### Lower State Challenge
+#### List.jsx
+
+```js
+import Person from "./Person";
+
+const List = ({ people }) => {
+    return (
+        <div>
+            {people.map((person) => {
+                return <Person key={person.id} {...person} />;
+            })}
+        </div>
+    );
+};
+export default List;
+```
+
+#### Person.jsx
+
+```js
+const Person = ({ name }) => {
+    console.log("render");
+
+    return (
+        <div>
+            <h4>{name}</h4>
+        </div>
+    );
+};
+export default Person;
+```
+
+### Lower State Challenge
 
 ```js
 import Starter from "./tutorial/11-performance/starter/02-lower-state-challenge";
 ```
 
 -   fix the re-rendering
--   hint addPerson fix
+
+-   hint: addPerson fix
 
 ```js
 import { useState } from "react";
