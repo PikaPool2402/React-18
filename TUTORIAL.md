@@ -2736,36 +2736,123 @@ useEffect(() => {
 import Starter from "./tutorial/08-custom-hooks/starter/01-toggle.jsx";
 ```
 
--   same rules as regular hooks
+-   used for abstracting some functionality
+-   same rules apply as regular hooks
 -   simplify component (less code)
 -   re-use functionality
 
-useToggle.js
+#### toggle.jsx
+
+```js
+import { useState } from "react";
+
+const ToggleExample = () => {
+    const [show, setShow] = useState(false);
+    return (
+        <div>
+            <h4>Toggle Custom Hook</h4>
+            <button className='btn' onClick={() => setShow(!show)}>
+                Toggle
+            </button>
+            {show && <h4>Some Stuff!</h4>}
+        </div>
+    );
+};
+export default ToggleExample;
+```
+
+-   Suppose, a lot of components require this functionality.
+
+-   We can set-up a custom hook, useToggle(), in useToggle.js file!
+
+-   We can return anything in the custom hook, in this case it is similar to a useState!
+
+#### useToggle.js
 
 ```js
 import { useState } from "react";
 
 const useToggle = (defaultValue) => {
+    // default value!
     const [show, setShow] = useState(defaultValue);
+
+    // function!
     const toggle = () => {
         setShow(!show);
     };
-    return { show, toggle };
+
+    return [show, toggle];
+    // return the default value that is passed to the custom hook!
+    // return the function that is used to change the custom hook!
+    // return an array of 2 elements, like useState!
 };
 
 export default useToggle;
 ```
 
--   Challenge
+#### toggle.jsx
+
+```js
+import useToggle from "./useToggle";
+
+const ToggleExample = () => {
+    const [show, toggle] = useToggle(false);
+    // use the custom hook!
+
+    return (
+        <div>
+            <h4>Toggle Custom Hook</h4>
+            <button className='btn' onClick={toggle}>
+                Toggle
+            </button>
+            {show && <h4>Some Stuff!</h4>}
+        </div>
+    );
+};
+export default ToggleExample;
+```
+
+#### Setup Challenge :
 
 -   in App.jsx import 02-fetch-data
--   take a look at the component
--   and try to setup custom fetch hook
--   hint :
-    hook should return isLoading,isError,user
-    and take url as parameter
+-   try to understand what the component does
+-   now, try to setup a custom hook, that fetches the data
+-   hint: hook should return isLoading, isError, user and take url as parameter!
 
-useFetchPerson.js
+#### Starter Component
+
+```js
+const useFetchPerson = (url) => {
+    const [isLoading, setIsLoading] = useState(true);
+    const [isError, setIsError] = useState(false);
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const resp = await fetch(url);
+                if (!resp.ok) {
+                    setIsError(true);
+                    setIsLoading(false);
+                    return;
+                }
+                const user = await resp.json();
+                setUser(user);
+            } catch (error) {
+                setIsError(true);
+            }
+            setIsLoading(false);
+        };
+        fetchUser();
+    }, []);
+
+    return { isLoading, isError, user };
+};
+
+export default useFetchPerson;
+```
+
+#### useFetchPerson.js (Custom Hook)
 
 ```js
 import { useState, useEffect } from "react";
@@ -2779,34 +2866,66 @@ const useFetchPerson = (url) => {
         const fetchUser = async () => {
             try {
                 const resp = await fetch(url);
-                // console.log(resp);
                 if (!resp.ok) {
                     setIsError(true);
                     setIsLoading(false);
                     return;
                 }
-
                 const user = await resp.json();
                 setUser(user);
             } catch (error) {
                 setIsError(true);
-                // console.log(error);
             }
-            // hide loading
             setIsLoading(false);
         };
         fetchUser();
     }, []);
 
+    // return an object from the custom hook!
     return { isLoading, isError, user };
 };
 
 export default useFetchPerson;
 ```
 
-Generic Fetch
+#### Final Component
 
-useFetch.js
+```js
+import useFetch from "./useFetch";
+const url = "https://api.github.com/users/QuincyLarson";
+
+const FetchData = () => {
+    const { isLoading, isError, data: user } = useFetch(url);
+
+    if (isLoading) {
+        return <h2>Loading...</h2>;
+    }
+    if (isError) {
+        return <h2>There was an error!</h2>;
+    }
+
+    const { avatar_url, name, company, bio } = user;
+    return (
+        <div>
+            <img
+                style={{ width: "150px", borderRadius: "25px" }}
+                src={avatar_url}
+                alt={name}
+            />
+            <h2>{name}</h2>
+            <h4>Works At : {company}</h4>
+            <p>{bio}</p>
+        </div>
+    );
+};
+export default FetchData;
+```
+
+### Generic Fetch
+
+-   **A more general approach of creating a custom hook for fetching any type of data!**
+
+#### useFetch.js (Custom Hook)
 
 ```js
 import { useState, useEffect } from "react";
@@ -2814,31 +2933,24 @@ import { useState, useEffect } from "react";
 const useFetch = (url) => {
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
-    // change state value
-    const [data, setData] = useState(null);
+    const [data, setData] = useState(null); // change state name!
 
     useEffect(() => {
-        // change name
         const fetchData = async () => {
             try {
                 const resp = await fetch(url);
-
                 if (!resp.ok) {
                     setIsError(true);
                     setIsLoading(false);
                     return;
                 }
-                // change to response
-                const response = await resp.json();
+                const response = await resp.json(); // change name to response!
                 setData(response);
             } catch (error) {
                 setIsError(true);
-                // console.log(error);
             }
-            // hide loading
             setIsLoading(false);
         };
-        // invoke fetch data
         fetchData();
     }, []);
 
@@ -2848,13 +2960,13 @@ const useFetch = (url) => {
 export default useFetch;
 ```
 
-#### Context API
+### Context API
 
 ```js
 import Starter from "./tutorial/09-context-api/starter";
 ```
 
-Challenge
+#### Setup Challenge :
 
 -   create three components and nest them in such way :
 
