@@ -3326,150 +3326,166 @@ import Starter from "./tutorial/10-useReducer/starter/01-useReducer.jsx";
 
 #### Setup Challenge :
 
--   let's add reset functionality
--   create function that set's people back to data array
--   create another button, similar to clear just for reset
--   use conditional rendering to toggle between the buttons,
-    depending on people value
+-   let's add a reset functionality
+-   create a function that sets the people back to the default data array
+-   create another button, similar to the clear button, for the reset functionality
+-   use conditional rendering to toggle between the buttons, depending on people values
+
+#### Code
 
 ```js
-const resetList = () => {
-    setPeople(data);
-};
-
-// JSX
-{
-    people.length < 1 ? (
-        <button
-            className='btn'
-            style={{ marginTop: "2rem" }}
-            onClick={resetList}
-        >
-            reset
-        </button>
-    ) : (
-        <button
-            className='btn'
-            style={{ marginTop: "2rem" }}
-            onClick={clearList}
-        >
-            clear
-        </button>
-    );
-}
-```
-
-```js
-import React from "react";
 import { data } from "../../../data";
-const ReducerBasics = () => {
-    const [people, setPeople] = React.useState(data);
+import { useState } from "react";
+
+const UseStateArray = () => {
+    const [people, setPeople] = useState(data);
 
     const removeItem = (id) => {
-        let newPeople = people.filter((person) => person.id !== id);
+        const newPeople = people.filter((person) => {
+            return person.id !== id;
+        });
         setPeople(newPeople);
+    };
+    const clearAllItems = () => {
+        setPeople([]);
     };
     const resetList = () => {
         setPeople(data);
     };
+
     return (
         <div>
             {people.map((person) => {
                 const { id, name } = person;
                 return (
-                    <div key={id} className='item'>
+                    <div key={id}>
                         <h4>{name}</h4>
-                        <button onClick={() => removeItem(id)}>remove</button>
+                        <button onClick={() => removeItem(id)}>
+                            Remove Item
+                        </button>
                     </div>
                 );
             })}
+
             {people.length < 1 ? (
                 <button
+                    type='button'
                     className='btn'
                     style={{ marginTop: "2rem" }}
                     onClick={resetList}
                 >
-                    reset
+                    Reset List
                 </button>
             ) : (
                 <button
+                    type='button'
                     className='btn'
                     style={{ marginTop: "2rem" }}
-                    onClick={clearList}
+                    onClick={clearAllItems}
                 >
-                    clear
+                    Remove All
                 </button>
             )}
         </div>
     );
 };
 
-export default ReducerBasics;
+export default UseStateArray;
 ```
 
-#### Remove useState
+### Refactor To useReducer!
+
+-   with useReducer, need to pass 2 things:
+    -   a reducer, a function that is going to manipulate/control the state
+    -   the default state and its value
+
+#### Code
 
 ```js
-import { useState, useReducer } from "react";
-import { data } from "../../../data";
-
-// default/initial state
+// default state!
 const defaultState = {
     people: data,
 };
-// reducer function
-// whatever state is returned from the function is the new state
 
-const reducer = (state, action) => {
-    return state;
-};
-
-// dispatch({type:'SOME_ACTION'}) an action
-// handle it in reducer, return new state
+// reducer function!
+const reducer = () => {};
 
 const ReducerBasics = () => {
+    // useReducer hook!
+    useReducer(reducer, defaultState);
+};
+```
+
+-   useReducer returns a state value, along with a dispatch
+-   the dispatch is a function, that is used to control the state
+-   however, the syntax is a little bit different than that from useState
+-   in the dispatch, we will pass in an action (what you want do?)
+-   then it is going to go through the reducer function we have set up
+-   and whatever we get back from the reducer, will be our new state and its value
+
+#### Initial Setup (Remove useState)
+
+```js
+import { data } from "../../../data";
+import { useReducer, useState } from "react";
+
+// default state!
+const defaultState = {
+    people: data,
+};
+
+// reducer function!
+const reducer = () => {};
+
+const ReducerBasics = () => {
+    // useReducer hook!
     const [state, dispatch] = useReducer(reducer, defaultState);
 
     const removeItem = (id) => {
-        // let newPeople = people.filter((person) => person.id !== id);
+        // const newPeople = people.filter((person) => {
+        //     return person.id !== id;
+        // });
         // setPeople(newPeople);
     };
-
-    const clearList = () => {
+    const clearAllItems = () => {
         // setPeople([]);
     };
     const resetList = () => {
         // setPeople(data);
     };
+    console.log(state);
 
     return (
         <div>
-            {/* switch to state */}
             {state.people.map((person) => {
                 const { id, name } = person;
                 return (
-                    <div key={id} className='item'>
+                    <div key={id}>
                         <h4>{name}</h4>
-                        <button onClick={() => removeItem(id)}>remove</button>
+                        <button onClick={() => removeItem(id)}>
+                            Remove Item
+                        </button>
                     </div>
                 );
             })}
-            {/* switch to state */}
+
             {state.people.length < 1 ? (
                 <button
+                    type='button'
                     className='btn'
                     style={{ marginTop: "2rem" }}
                     onClick={resetList}
                 >
-                    reset
+                    Reset List
                 </button>
             ) : (
                 <button
+                    type='button'
                     className='btn'
                     style={{ marginTop: "2rem" }}
-                    onClick={clearList}
+                    onClick={clearAllItems}
                 >
-                    clear
+                    Remove All
                 </button>
             )}
         </div>
@@ -3479,32 +3495,57 @@ const ReducerBasics = () => {
 export default ReducerBasics;
 ```
 
-#### First Dispatch
+#### Reducer Setup
+
+-   dispatch something called action, and the action is handled by the reducer
+
+-   whatever gets returned from the reducer, becomes the new state
+
+-   the reducer function receives two things
+
+    -   the state right before the update
+
+    -   and the action (what are we trying to do!)
+
+-   invoke the dispatch, to update the state
+
+-   MUST MUST MUST pass in the type property in an object inside dispatch
+
+-   this type/action is handled inside the reducer function
+
+-   the reducer always returns the new state value, if we don't return anything it returns undefined state as the new state!
+
+#### Code (First Dispatch)
 
 ```js
-import { useState, useReducer } from "react";
 import { data } from "../../../data";
+import { useReducer, useState } from "react";
 
+// default state!
 const defaultState = {
     people: data,
     isLoading: false,
 };
 
+// reducer function!
 const reducer = (state, action) => {
-    if (action.type === "CLEAR_LIST") {
+    if (action.type == "CLEAR_LIST") {
+        // spread out the values, to preserve the isLoading state!
         return { ...state, people: [] };
     }
 };
 
 const ReducerBasics = () => {
+    // useReducer hook!
     const [state, dispatch] = useReducer(reducer, defaultState);
 
     const removeItem = (id) => {
-        // let newPeople = people.filter((person) => person.id !== id);
+        // const newPeople = people.filter((person) => {
+        //     return person.id !== id;
+        // });
         // setPeople(newPeople);
     };
-
-    const clearList = () => {
+    const clearAllItems = () => {
         dispatch({ type: "CLEAR_LIST" });
         // setPeople([]);
     };
@@ -3512,32 +3553,38 @@ const ReducerBasics = () => {
         // setPeople(data);
     };
     console.log(state);
+
     return (
         <div>
             {state.people.map((person) => {
                 const { id, name } = person;
                 return (
-                    <div key={id} className='item'>
+                    <div key={id}>
                         <h4>{name}</h4>
-                        <button onClick={() => removeItem(id)}>remove</button>
+                        <button onClick={() => removeItem(id)}>
+                            Remove Item
+                        </button>
                     </div>
                 );
             })}
+
             {state.people.length < 1 ? (
                 <button
+                    type='button'
                     className='btn'
                     style={{ marginTop: "2rem" }}
                     onClick={resetList}
                 >
-                    reset
+                    Reset List
                 </button>
             ) : (
                 <button
+                    type='button'
                     className='btn'
                     style={{ marginTop: "2rem" }}
-                    onClick={clearList}
+                    onClick={clearAllItems}
                 >
-                    clear
+                    Remove All
                 </button>
             )}
         </div>
@@ -3549,66 +3596,82 @@ export default ReducerBasics;
 
 #### Actions and Default State
 
-```js
-import { useReducer } from "react";
-import { data } from "../../../data";
+-   The common convention is to use a variable for storing the type of action, to avoid typos.
 
+#### Example
+
+```js
+import { data } from "../../../data";
+import { useReducer, useState } from "react";
+
+const defaultState = {
+    people: data,
+    isLoading: false,
+};
+
+// define action variables!
 const CLEAR_LIST = "CLEAR_LIST";
 const RESET_LIST = "RESET_LIST";
 const REMOVE_ITEM = "REMOVE_ITEM";
 
-const defaultState = {
-    people: data,
-};
-
 const reducer = (state, action) => {
-    console.log(action);
-    if (action.type === CLEAR_LIST) {
+    if (action.type == "CLEAR_LIST") {
         return { ...state, people: [] };
     }
 
-    throw new Error(`No Matching "${action.type}" - action type`);
+    return state;
+    // if no conditions match, return the same state to avoid error!
 };
 
 const ReducerBasics = () => {
     const [state, dispatch] = useReducer(reducer, defaultState);
 
-    const removeItem = (id) => {};
-
-    const clearList = () => {
-        dispatch({ type: CLEAR_LIST });
+    const removeItem = (id) => {
+        // const newPeople = people.filter((person) => {
+        //     return person.id !== id;
+        // });
+        // setPeople(newPeople);
     };
+    const clearAllItems = () => {
+        dispatch({ type: CLEAR_LIST });
+        // setPeople([]);
+    };
+    const resetList = () => {
+        // setPeople(data);
+    };
+    console.log(state);
 
-    const resetList = () => {};
     return (
         <div>
-            {/* switch to state */}
             {state.people.map((person) => {
                 const { id, name } = person;
                 return (
-                    <div key={id} className='item'>
+                    <div key={id}>
                         <h4>{name}</h4>
-                        <button onClick={() => removeItem(id)}>remove</button>
+                        <button onClick={() => removeItem(id)}>
+                            Remove Item
+                        </button>
                     </div>
                 );
             })}
-            {/* switch to state */}
 
             {state.people.length < 1 ? (
                 <button
+                    type='button'
                     className='btn'
                     style={{ marginTop: "2rem" }}
                     onClick={resetList}
                 >
-                    reset
+                    Reset List
                 </button>
             ) : (
                 <button
+                    type='button'
                     className='btn'
                     style={{ marginTop: "2rem" }}
-                    onClick={clearList}
+                    onClick={clearAllItems}
                 >
-                    clear
+                    Remove All
                 </button>
             )}
         </div>
@@ -3616,6 +3679,23 @@ const ReducerBasics = () => {
 };
 
 export default ReducerBasics;
+```
+
+-   How to handle errors?
+
+-   We can either return the same state, if none of the conditions match, or we can throw an error!
+
+#### Code
+
+```js
+const reducer = (state, action) => {
+    if (action.type == "CLEAR_LIST") {
+        return { ...state, people: [] };
+    }
+
+    // return state;
+    throw new Error(`no matching "${action.type} - action type!"`);
+};
 ```
 
 #### Reset List Challenge
