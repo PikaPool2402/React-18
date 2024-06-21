@@ -3073,6 +3073,142 @@ const UserContainer = ({ user, logout }) => {
 export default UserContainer;
 ```
 
+-   Now, we will use context api, to bypass the middle elements, to directly pass down the props to the grandchild!
+
+### Setup Using Context API!
+
+-   how to invoke context api? import from react library!
+
+-   invoke createContext() inside the parent function
+
+-   it is going to return two things
+
+    -   provider component (going to use this component, in our project)
+
+    -   consumer component (use useContext hook, instead of this component)
+
+```js
+import { createContext } from "react";
+
+export const NavbarContext = createContext();
+
+console.log(NavbarContext);
+```
+
+-   go the parent element, that provides the values, and wrap the return inside the provider.
+
+-   provider has a "value" prop, and the value inside this "value" prop can be accessed by any component inside the component tree!
+
+```js
+import { createContext } from "react";
+import { useState } from "react";
+import NavLinks from "./NavLinks";
+
+// invoke the context api!
+export const NavbarContext = createContext();
+
+const Navbar = () => {
+    const [user, setUser] = useState({ name: "bob" });
+
+    const logout = () => {
+        setUser(null);
+    };
+
+    return (
+        // wrap the return inside provider!
+        <NavbarContext.Provider value={{ user: user, logout: logout }}>
+            <nav className='navbar'>
+                <h5>CONTEXT API</h5>
+                <NavLinks />
+            </nav>
+        </NavbarContext.Provider>
+    );
+};
+export default Navbar;
+```
+
+-   Now, we can bypass the NavLinks component, and access user, logout directly inside UserContainer.jsx
+
+-   Need two things:
+
+    -   NavBar context
+
+    -   useContext hook
+
+-   useContext() is a special hook, that looks for the context coming from the parent!
+
+##### Navbar.jsx
+
+```js
+import { createContext } from "react";
+import { useState } from "react";
+import NavLinks from "./NavLinks";
+
+export const NavbarContext = createContext();
+
+const Navbar = () => {
+    const [user, setUser] = useState({ name: "bob" });
+
+    const logout = () => {
+        setUser(null);
+    };
+
+    return (
+        <NavbarContext.Provider value={{ user: user, logout: logout }}>
+            <nav className='navbar'>
+                <h5>CONTEXT API</h5>
+                <NavLinks />
+            </nav>
+        </NavbarContext.Provider>
+    );
+};
+export default Navbar;
+```
+
+##### UserContainer.jsx
+
+```js
+import { useContext } from "react";
+import { NavbarContext } from "./Navbar";
+
+const UserContainer = () => {
+    // can access the values from the parent directly!
+    const value = useContext(NavbarContext);
+    console.log(value);
+
+    return "hello world";
+};
+export default UserContainer;
+```
+
+##### UserContainer.jsx
+
+```js
+import { useContext } from "react";
+import { NavbarContext } from "./Navbar";
+
+const UserContainer = () => {
+    const { user, logout } = useContext(NavbarContext);
+    // destructure to grab the properties directly!
+
+    return (
+        <div className='user-container'>
+            {user ? (
+                <>
+                    <p>Hello There, {user.name.toUpperCase()}</p>
+                    <button type='button' className='btn' onClick={logout}>
+                        logout
+                    </button>
+                </>
+            ) : (
+                <p>Please Login</p>
+            )}
+        </div>
+    );
+};
+export default UserContainer;
+```
+
 #### Setup Global Context
 
 final code in the repo under w-assets

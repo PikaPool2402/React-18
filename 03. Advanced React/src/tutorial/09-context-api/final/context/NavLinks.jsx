@@ -5,10 +5,10 @@ const NavLinks = () => {
         <div className='nav-container'>
             <ul className='nav-links'>
                 <li>
-                    <a href='#'>home</a>
+                    <a href='#'>Home</a>
                 </li>
                 <li>
-                    <a href='#'>about</a>
+                    <a href='#'>About</a>
                 </li>
             </ul>
             <UserContainer />
