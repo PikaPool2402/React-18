@@ -3319,9 +3319,12 @@ npm install && npm run dev
 import Starter from "./tutorial/10-useReducer/starter/01-useReducer.jsx";
 ```
 
--   it's the complete file from 03-useState-array
+-   can consider useReducer hook as a light version of Redux!
+-   in a large project, can become difficult to manage so many states
+-   therefore, we use state management libraries like redux, for easier code management
+-   however, these state management libraries are difficult to use and understand, and requires practice
 
-Challenge
+#### Setup Challenge :
 
 -   let's add reset functionality
 -   create function that set's people back to data array
