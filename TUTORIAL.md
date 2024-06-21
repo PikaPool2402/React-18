@@ -2598,7 +2598,7 @@ export default UncontrolledInputs;
 
 -   The reset() method is a built-in method in HTML that can be used to reset all form controls to their initial values. When this method is called on a form element, it will clear any user-entered data and reset the values of all form elements to their default values.
 
-### useRef Hook
+## useRef Hook
 
 ```js
 import Starter from "./tutorial/07-useRef/starter/01-useRef-basics.jsx";
@@ -2730,7 +2730,7 @@ useEffect(() => {
 });
 ```
 
-### Custom Hooks
+## Custom Hooks
 
 ```js
 import Starter from "./tutorial/08-custom-hooks/starter/01-toggle.jsx";
@@ -2960,7 +2960,7 @@ const useFetch = (url) => {
 export default useFetch;
 ```
 
-### Context API
+## Context API
 
 ```js
 import Starter from "./tutorial/09-context-api/starter";
@@ -3313,7 +3313,7 @@ npm install && npm run dev
 -   check in App.jsx if working
 -   log value of name
 
-### useReducer Hook
+## useReducer Hook
 
 ```js
 import Starter from "./tutorial/10-useReducer/starter/01-useReducer.jsx";
@@ -3700,72 +3700,83 @@ const reducer = (state, action) => {
 
 #### Reset List Challenge
 
--   setup a dispatch and handle action in the reducer
+-   reset the list back to original data array!
+
+#### Code
 
 ```js
-import { useReducer } from "react";
 import { data } from "../../../data";
+import { useReducer, useState } from "react";
 
+const defaultState = {
+    people: data,
+    isLoading: false,
+};
+
+// define action variables!
 const CLEAR_LIST = "CLEAR_LIST";
 const RESET_LIST = "RESET_LIST";
 const REMOVE_ITEM = "REMOVE_ITEM";
 
-const defaultState = {
-    people: data,
-};
-
 const reducer = (state, action) => {
-    console.log(action);
-    if (action.type === CLEAR_LIST) {
+    if (action.type == CLEAR_LIST) {
         return { ...state, people: [] };
     }
     if (action.type === RESET_LIST) {
         return { ...state, people: data };
     }
-    throw new Error(`No Matching "${action.type}" - action type`);
+
+    throw new Error(`no matching "${action.type} - action type!"`);
 };
 
 const ReducerBasics = () => {
     const [state, dispatch] = useReducer(reducer, defaultState);
 
-    const removeItem = (id) => {};
-
-    const clearList = () => {
+    const removeItem = (id) => {
+        // const newPeople = people.filter((person) => {
+        //     return person.id !== id;
+        // });
+        // setPeople(newPeople);
+    };
+    const clearAllItems = () => {
         dispatch({ type: CLEAR_LIST });
     };
     const resetList = () => {
         dispatch({ type: RESET_LIST });
     };
+    console.log(state);
 
     return (
         <div>
-            {/* switch to state */}
             {state.people.map((person) => {
                 const { id, name } = person;
                 return (
-                    <div key={id} className='item'>
+                    <div key={id}>
                         <h4>{name}</h4>
-                        <button onClick={() => removeItem(id)}>remove</button>
+                        <button onClick={() => removeItem(id)}>
+                            Remove Item
+                        </button>
                     </div>
                 );
             })}
-            {/* switch to state */}
 
             {state.people.length < 1 ? (
                 <button
+                    type='button'
                     className='btn'
                     style={{ marginTop: "2rem" }}
                     onClick={resetList}
                 >
-                    reset
+                    Reset List
                 </button>
             ) : (
                 <button
+                    type='button'
                     className='btn'
                     style={{ marginTop: "2rem" }}
-                    onClick={clearList}
+                    onClick={clearAllItems}
                 >
-                    clear
+                    Remove All
                 </button>
             )}
         </div>
@@ -3777,83 +3788,88 @@ export default ReducerBasics;
 
 #### Remove Person Challenge
 
--   remove single person
--   hint extra property in the object
+-   remove a single person
+
+-   hint: add an extra property "id" in the dispatch object!
+
+#### Code
 
 ```js
-import { useReducer } from "react";
 import { data } from "../../../data";
+import { useReducer, useState } from "react";
 
+const defaultState = {
+    people: data,
+    isLoading: false,
+};
+
+// define action variables!
 const CLEAR_LIST = "CLEAR_LIST";
 const RESET_LIST = "RESET_LIST";
 const REMOVE_ITEM = "REMOVE_ITEM";
 
-const defaultState = {
-    people: data,
-};
-
 const reducer = (state, action) => {
-    console.log(action);
-    if (action.type === CLEAR_LIST) {
+    if (action.type == CLEAR_LIST) {
         return { ...state, people: [] };
     }
     if (action.type === RESET_LIST) {
         return { ...state, people: data };
     }
     if (action.type === REMOVE_ITEM) {
-        let newPeople = state.people.filter(
-            (person) => person.id !== action.payload.id
-        );
-
+        const newPeople = state.people.filter((person) => {
+            return person.id !== action.payload.id;
+        });
         return { ...state, people: newPeople };
     }
 
-    return state;
+    throw new Error(`no matching "${action.type} - action type!"`);
 };
 
 const ReducerBasics = () => {
     const [state, dispatch] = useReducer(reducer, defaultState);
 
     const removeItem = (id) => {
-        dispatch({ type: REMOVE_ITEM, payload: { id } });
+        dispatch({ type: REMOVE_ITEM, payload: { id: id } });
     };
-
-    const clearList = () => {
+    const clearAllItems = () => {
         dispatch({ type: CLEAR_LIST });
     };
     const resetList = () => {
         dispatch({ type: RESET_LIST });
     };
+    console.log(state);
 
     return (
         <div>
-            {/* switch to state */}
             {state.people.map((person) => {
                 const { id, name } = person;
                 return (
-                    <div key={id} className='item'>
+                    <div key={id}>
                         <h4>{name}</h4>
-                        <button onClick={() => removeItem(id)}>remove</button>
+                        <button onClick={() => removeItem(id)}>
+                            Remove Item
+                        </button>
                     </div>
                 );
             })}
-            {/* switch to state */}
 
             {state.people.length < 1 ? (
                 <button
+                    type='button'
                     className='btn'
                     style={{ marginTop: "2rem" }}
                     onClick={resetList}
                 >
-                    reset
+                    Reset List
                 </button>
             ) : (
                 <button
+                    type='button'
                     className='btn'
                     style={{ marginTop: "2rem" }}
-                    onClick={clearList}
+                    onClick={clearAllItems}
                 >
-                    clear
+                    Remove All
                 </button>
             )}
         </div>
@@ -3863,23 +3879,35 @@ const ReducerBasics = () => {
 export default ReducerBasics;
 ```
 
-#### Import / Export
+### Import / Export
+
+-   as we increase the actions, the code inside the reducer also increases.
+
+-   therefore, the code becomes hard to read and manage!
+
+#### Solution
 
 -   create new file - actions.js
 
     -   copy/paste all actions
+
     -   export/import actions
 
 -   create new file - reducer.js
 
     -   copy/paste reducer
+
     -   import actions
+
     -   import data
+
     -   export/import reducer
 
-#### Performance
+-   code for the above is in final folder!
 
-#### Lower State / Push The State Down
+## Performance
+
+### Lower State / Push The State Down
 
 ```js
 import Starter from "./tutorial/11-performance/starter/01-lower-state";
