@@ -4044,40 +4044,65 @@ import Starter from "./tutorial/11-performance/starter/02-lower-state-challenge"
 import Starter from "./tutorial/11-performance/starter/03-hooks";
 ```
 
-React.memo is a higher-order component (HOC) in React that allows you to memoize a component. This means that if the input props to the component have not changed, the memoized component will return the same result from the previous render, instead of re-rendering. This can help improve performance by avoiding unnecessary render cycles.
+-   React.memo is a higher-order component (HOC) in React that allows you to memoize a component. This means that if the input props to the component have not changed, the memoized component will return the same result from the previous render, instead of re-rendering. This can help improve performance by avoiding unnecessary render cycles.
 
-The React.memo function takes a functional component as its argument and returns a new component that has the same behavior, but with the added optimization of checking if the props have changed. If the props have not changed, the memoized component will return the cached result from the previous render.
+-   The React.memo function takes a functional component as its argument and returns a new component that has the same behavior, but with the added optimization of checking if the props have changed. If the props have not changed, the memoized component will return the cached result from the previous render.
 
-Here's an example of using React.memo
+#### Example
+
+-   If we stop the List component from re-rendering when the index.jsx re-renders, the Person component will also not re-render.
+
+-   Therefore we need to memoize the List component.
+
+#### List.jsx
 
 ```js
+import { memo } from "react";
+import Item from "./Person";
+
+const List = ({ people }) => {
+    return (
+        <div>
+            {people.map((person) => {
+                return <Item key={person.id} {...person} />;
+            })}
+        </div>
+    );
+};
+export default memo(List);
+```
+
+#### Syntax
+
+```js
+// React.memo(Component) - returns memoized component
+
 const MyComponent = React.memo(function MyComponent(props) {
     /* render logic */
 });
 ```
 
-React.memo(Component) - returns memoized component
-
 #### Function "Gotcha"
 
--   setup remove person function
+-   Problem when we pass the function as a prop.
 
-```js
-const removePerson = (id) => {
-    const newPeople = people.filter((person) => person.id !== id);
-    setPeople(newPeople);
-};
-```
+-   Whenever the parent element is re-rendered, the function is created again from scratch.
 
--   pass it down to List and Person
+-   Since, we are passing the function as a prop from the parent element, and the function is created again and again, React thinks that the function that is passed as a prop is changed.
 
-#### UseCallback
+-   As a result, the child component is also re-rendered.
 
-The useCallback hook is a hook in React that allows you to memoize a function. It takes two arguments: the first is the function you want to memoize, and the second is an array of dependencies. The hook will return a memoized version of the function that only changes if one of the values in the dependency array changes.
+-   Therefore, need to fix this!
 
-By memoizing the function, you can avoid unnecessary re-renders and improve the performance of your React application. The function will only be re-created if one of its dependencies changes, otherwise the same instance of the function will be returned. This can be useful in situations where you have an expensive function that you only want to recompute when its dependencies change.
+#### useCallback Hook
 
-Here is an example of how you might use useCallback:
+-   The useCallback hook is a hook in React that allows you to memoize a function. It takes two arguments: the first is the function you want to memoize, and the second is an array of dependencies. The hook will return a memoized version of the function that only changes if one of the values in th e dependency array changes.
+
+-   By memoizing the function, you can avoid unnecessary re-renders and improve the performance of your React application. The function will only be re-created if one of its dependencies changes, otherwise the same instance of the function will be returned. This can be useful in situations where you have an expensive function that you only want to recompute when its dependencies change.
+
+-   Be careful, while specifying empty dependency array, as the function will not be created again! As a result, the values used initially in the function will be considered for all subsequent operations!
+
+#### Example
 
 ```js
 import React, { useCallback, useState } from "react";
@@ -4096,44 +4121,15 @@ function MyComponent() {
 }
 ```
 
-In this example, the handleClick function is memoized using useCallback and the data prop is passed as a dependency. This means that the handleClick function will only be re-created if the data prop changes.
+-   In this example, the handleClick function is memoized using useCallback and the data prop is passed as a dependency. This means that the handleClick function will only be re-created if the data argument changes.
 
-#### useCallback - Common Use Case
+#### useMemo Hook
 
-```js
-import Final from "./tutorial/02-useEffect/final/04-fetch-data";
-```
+-   The useMemo hook is a hook in React that allows you to memoize a value. It takes two arguments: the first is a function that returns the value you want to memoize, and the second is an array of dependencies. The hook will return the memoized value that will only change if one of the values in the dependency array changes.
 
-```js
-import { useState, useEffect, useCallback } from "react";
-const url = "https://api.github.com/users";
+-   By memoizing a value, you can avoid unnecessary calculations and improve the performance of your React application. The value will only be recalculated if one of its dependencies changes, otherwise the same instance of the value will be returned. This can be useful in situations where you have an expensive calculation that you only want to recompute when its dependencies change.
 
-const FetchData = () => {
-    const [users, setUsers] = useState([]);
-    const fetchData = useCallback(async () => {
-        try {
-            const response = await fetch(url);
-            const users = await response.json();
-            setUsers(users);
-        } catch (error) {
-            console.log(error);
-        }
-    }, []);
-
-    useEffect(() => {
-        fetchData();
-    }, [fetchData]);
-    // rest of the logic
-};
-```
-
-#### useMemo
-
-The useMemo hook is a hook in React that allows you to memoize a value. It takes two arguments: the first is a function that returns the value you want to memoize, and the second is an array of dependencies. The hook will return the memoized value that will only change if one of the values in the dependency array changes.
-
-By memoizing a value, you can avoid unnecessary calculations and improve the performance of your React application. The value will only be recalculated if one of its dependencies changes, otherwise the same instance of the value will be returned. This can be useful in situations where you have an expensive calculation that you only want to recompute when its dependencies change.
-
-Here is an example of how you might use useMemo:
+#### Example
 
 ```js
 import React, { useMemo } from "react";
@@ -4153,7 +4149,7 @@ function MyComponent({ data }) {
 }
 ```
 
-In this example, the processedData value is memoized using useMemo and the data prop is passed as a dependency. This means that the processedData value will only be recalculated if the data prop changes.
+-   In this example, the processedData value is memoized using useMemo and the data prop is passed as a dependency. This means that the processedData value will only be recalculated if the data prop changes.
 
 -   create slowFunction file
 -   setup a function
