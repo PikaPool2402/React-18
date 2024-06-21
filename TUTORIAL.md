@@ -3277,32 +3277,43 @@ const UserContainer = () => {
 export default UserContainer;
 ```
 
-### Setup Global Context
+### Setup Global Context!
 
-final code in the repo under w-assets
+-   **provide some data, to all of our components in our application!**
 
--   create new VITE project
+#### Setup :
+
+-   create a new VITE project
+
+-   code inside global-context vite app
 
 ```sh
 npm create vite@latest global-context -- --template react
-```
 
--   install and start the project
-
-```sh
 npm install && npm run dev
 ```
 
--   in src create context.jsx
--   setup a global context - GlobalContext
--   setup a component (AppContext) with one state value
--   return GlobalContext.Provider from AppContext
--   wrap then entire application (main.jsx) - children prop "gotcha"
--   setup a custom hook
--   access in App.jsx
--   log result
+##### Step #1
 
-#### useReducer
+-   in src folder, create a new file "context.jsx"
+-   setup a global context with the name as "GlobalContext"
+-   setup a new component (AppContext) with one state value
+-   return GlobalContext.Provider from AppContext function/component
+
+##### Step #2
+
+-   wrap our entire application (main.jsx) inside the AppContext component
+-   this basically wraps our entire application inside GlobalContext.Provider
+-   therefore, it allows us to access the value inside the "value" attribute anywhere inside our application!
+
+##### Step #3
+
+-   need to pass children prop (fix error)
+-   setup a custom hook for easy access
+-   check in App.jsx if working
+-   log value of name
+
+### useReducer Hook
 
 ```js
 import Starter from "./tutorial/10-useReducer/starter/01-useReducer.jsx";
