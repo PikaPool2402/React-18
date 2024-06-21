@@ -3978,6 +3978,54 @@ const Person = ({ name }) => {
 export default Person;
 ```
 
+#### Solution
+
+-   The solution is to "lower the state"
+-   Move the state variable, and the button to a seperate component (Counter.jsx)
+-   Now, when we change the state of the count, only the Counter component is re-rendered, as the parent does not change!
+
+##### Counter.jsx
+
+```js
+import { useState } from "react";
+
+const Counter = () => {
+    const [count, setCount] = useState(0);
+    return (
+        <button
+            className='btn'
+            onClick={() => setCount(count + 1)}
+            style={{ marginBottom: "1rem" }}
+        >
+            count {count}
+        </button>
+    );
+};
+export default Counter;
+```
+
+##### index.jsx
+
+```js
+import { useState } from "react";
+import { data } from "../../../../data";
+
+import List from "./List";
+import Counter from "./Counter";
+
+const LowerState = () => {
+    const [people, setPeople] = useState(data);
+
+    return (
+        <section>
+            <Counter />
+            <List people={people} />
+        </section>
+    );
+};
+export default LowerState;
+```
+
 ### Lower State Challenge
 
 ```js
