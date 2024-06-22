@@ -1,5 +1,5 @@
 function App() {
-    return <h1>BackRoads Project</h1>;
+    return <h1>React Setup</h1>;
 }
 
 export default App;
