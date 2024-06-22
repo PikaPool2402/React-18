@@ -4096,7 +4096,7 @@ const MyComponent = React.memo(function MyComponent(props) {
 
 #### useCallback Hook
 
--   The useCallback hook is a hook in React that allows you to memoize a function. It takes two arguments: the first is the function you want to memoize, and the second is an array of dependencies. The hook will return a memoized version of the function that only changes if one of the values in th e dependency array changes.
+-   The useCallback hook is a hook in React that allows you to memoize a function. It takes two arguments: the first is the function you want to memoize, and the second is an array of dependencies. The hook will return a memoized version of the function that only changes if one of the values in the dependency array changes.
 
 -   By memoizing the function, you can avoid unnecessary re-renders and improve the performance of your React application. The function will only be re-created if one of its dependencies changes, otherwise the same instance of the function will be returned. This can be useful in situations where you have an expensive function that you only want to recompute when its dependencies change.
 
@@ -4129,7 +4129,7 @@ function MyComponent() {
 
 -   By memoizing a value, you can avoid unnecessary calculations and improve the performance of your React application. The value will only be recalculated if one of its dependencies changes, otherwise the same instance of the value will be returned. This can be useful in situations where you have an expensive calculation that you only want to recompute when its dependencies change.
 
-#### Example
+#### Example #1
 
 ```js
 import React, { useMemo } from "react";
@@ -4151,9 +4151,13 @@ function MyComponent({ data }) {
 
 -   In this example, the processedData value is memoized using useMemo and the data prop is passed as a dependency. This means that the processedData value will only be recalculated if the data prop changes.
 
--   create slowFunction file
--   setup a function
+#### Example #2
+
+-   create slowFunction.js
+-   setup a function that runs for a long time
 -   import in index.js and set it equal to a value
+
+##### slowFunction.js
 
 ```js
 const slowFunction = () => {
@@ -4167,13 +4171,47 @@ const slowFunction = () => {
 export default slowFunction;
 ```
 
-#### useTransition
+##### index.jsx
 
-[JS Nuggets - Array.from](https://www.youtube.com/watch?v=zg1Bv4xubwo&list=PLnHJACx3NwAfRUcuKaYhZ6T5NRIpzgNGJ&index=11&t=666s)
+```js
+import { useMemo, useState } from "react";
+import { data } from "../../../../data";
+
+import List from "./List";
+import slowFunction from "./slowFunction";
+
+const LowerState = () => {
+    const [people, setPeople] = useState(data);
+    const [count, setCount] = useState(0);
+
+    const value = useMemo(() => {
+        return slowFunction();
+    }, []);
+    console.log(value);
+
+    return (
+        <section>
+            <button
+                className='btn'
+                onClick={() => setCount(count + 1)}
+                style={{ marginBottom: "1rem" }}
+            >
+                Count {count}
+            </button>
+            <List people={people} />
+        </section>
+    );
+};
+export default LowerState;
+```
+
+#### useTransition Hook
 
 ```js
 import Starter from "./tutorial/11-performance/starter/04-react-18";
 ```
+
+-   [JS Nuggets - Array.from](https://www.youtube.com/watch?v=zg1Bv4xubwo&list=PLnHJACx3NwAfRUcuKaYhZ6T5NRIpzgNGJ&index=11&t=666s)
 
 -   useTransition is a React Hook that lets you update the state without blocking the UI.
 
